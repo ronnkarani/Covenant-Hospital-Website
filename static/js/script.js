@@ -80,3 +80,15 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// static/js/messages.js
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Auto-hide alerts after 4 seconds
+  setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(el => {
+      el.style.transition = "opacity 0.5s ease";
+      el.style.opacity = "0";
+      setTimeout(() => el.remove(), 500);
+    });
+  }, 4000);
+});

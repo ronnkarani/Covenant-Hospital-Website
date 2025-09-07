@@ -37,14 +37,15 @@
     </div>
   </div>
 
-  <div class="video-wrapper">
-    {% if about_page.video_file %}
-      
-        <iframe src="{{ about_page.video_file.url }}" title="Hospital Tour" frameborder="0" allowfullscreen type="video/mp4"></iframe>
-      
-      
-    {% endif %}
-  </div>
+  {% if about_page.video_file %}
+<div class="video-wrapper">
+  <video controls>
+    <source src="{{ about_page.video_file.url }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+{% endif %}
+
 </section>
 
 <!-- Services Section -->

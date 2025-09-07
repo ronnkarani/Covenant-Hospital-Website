@@ -1,9 +1,58 @@
-from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import HeroSlide, HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment
 from .forms import CommentForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib import messages
+
+
+#LOGIN VIEW
+def signup_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return redirect("signup")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken")
+            return redirect("signup")
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+        messages.success(request, "Account created successfully! You can log in.")
+        return redirect("login")
+
+    return render(request, "signup.html")
+
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect("index")  # change to your homepage
+        else:
+            messages.error(request, "Invalid username or password")
+            return redirect("login")
+
+    return render(request, "login.html")
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect("index")
+
 
 #HOME PAGE
 def index(request):
@@ -90,6 +139,7 @@ def blog_detail(request, pk):
 
     recent_posts = BlogPost.objects.order_by("-date")[:3]
     popular_posts = BlogPost.objects.order_by("-views")[:4]
+    partners = PartnerLogo.objects.all()
 
     return render(request, "blog_detail.html", {
         "blog": blog,
@@ -97,6 +147,7 @@ def blog_detail(request, pk):
         "comment_form": form,
         "recent_posts": recent_posts,
         "popular_posts": popular_posts,
+        "partners": partners,
     })
 
 
@@ -111,4 +162,7 @@ def blog_like(request, pk):
 
 #CONTACT PAGE
 def contact(request):
-    return render(request, "contact.html")
+    partners = PartnerLogo.objects.all()
+
+    return render(request, "contact.html", {        "partners": partners,
+})

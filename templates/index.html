@@ -63,13 +63,16 @@
             </div>
         </div>
     </div>
-    {% if about.video_file.url %}
-    <div class="video-wrapper">
-        <video controls>
-        <iframe src="{{ about_page.video_file.url }}" title="Hospital Tour" frameborder="0" allowfullscreen type="video/mp4"></iframe>
-      </video>
-    </div>
-    {% endif %}
+    
+    {% if about.video_file %}
+<div class="video-wrapper">
+  <video controls>
+    <source src="{{ about.video_file.url }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+{% endif %}
+
 </section>
 
 
