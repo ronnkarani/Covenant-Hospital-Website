@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{ blog.title }} - Covenant Hospital
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero hero-small">
+  <div class="hero-bg" style="background-image:url('{% static "images/contact-hero.jpg" %}');"></div>
+  <div class="hero-overlay">
+    <h1>{{ blog.title }}</h1>
+    <a href="{% url 'contact' %}" class="btn appointment-btn">Book Appointment</a>
+  </div>
+</section>
+
+<!-- Blog Details Layout -->
+<section class="blog-layout">
+  <!-- Blog Content (Left) -->
+  <div class="single-blog">
+    <img src="{{ blog.image.url }}" alt="{{ blog.title }}">
+    <h2>{{ blog.title }}</h2>
+    <div class="blog-meta">
+      <span><i class="fas fa-user"></i> {{ blog.author }}</span>
+      <span><i class="fas fa-calendar"></i> {{ blog.date}}</span>
+      <span><i class="fas fa-eye"></i> {{ blog.views }}</span>
+      <form action="{% url 'blog_like' blog.id %}" method="POST" class="like-form">
+  {% csrf_token %}
+  <button type="submit" class="like-btn">
+    <i class="fas fa-heart"></i> {{ blog.total_likes }}
+  </button>
+</form>
+
+      <span><i class="fas fa-comments"></i> {{ blog.comments.count }}</span>
+    </div>
+    <div class="blog-body">
+      {{ blog.content|safe }}
+    </div>
+  </div>
+
+  <!-- Sidebar (Right) -->
+  <aside class="blog-sidebar">
+    <div class="sidebar-box">
+      <h3>Recent Posts</h3>
+      <ul class="sidebar-posts">
+        {% for post in recent_posts %}
+        <li>
+          <img src="{{ post.image.url }}" alt="{{ post.title }}">
+          <a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    
+  </aside>
+</section>
+
+<!-- Comments Section -->
+<section class="comments-section">
+  <div class="comments-list-wrapper">
+    <h3>Comments</h3>
+    <ul class="comment-list">
+      {% for comment in comments %}
+      <li class="comment">
+        <strong>{{ comment.name }}:</strong> {{ comment.body }}
+        {% if comment.replies.all %}
+        <ul class="reply-list">
+          {% for reply in comment.replies.all %}
+          <li><strong>{{ reply.name }}:</strong> {{ reply.body }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% empty %}
+      <p>No comments yet. Be the first!</p>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Comment Form -->
+  <div class="comment-form-wrapper">
+    <h3>Leave a Comment</h3>
+    <form method="post" class="comment-form">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <button type="submit">Submit Comment</button>
+    </form>
+  </div>
+</section>
+
+<!-- Accreditation Section -->
+    {% include "includes/partners.html" %}
+
+
+{% endblock %}

@@ -1,0 +1,39 @@
+
+{% load static %}
+    <header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'images/logo-navbar.png' %}" alt="Covenant Hospital Logo" class="nav-logo">
+                Covenant Hospital
+            </a>
+        </div>
+
+        <!-- Main Nav Links -->
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'blog' %}">Blog</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+
+        <!-- Right Side -->
+        <div class="nav-actions">
+            <div class="user-dropdown">
+                <a href="#" class="user-toggle">
+                    <i class="fas fa-user"></i>
+                    <span>Ronny</span>
+                    <i class="fas fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="">Login</a></li>
+                    <li><a href="">Signup</a></li>
+                    <li><a href="">Portal</a></li>
+                </ul>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+</header>

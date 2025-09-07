@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Covenant Hospital | Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="index.html">
+          <img src="images/logo-navbar.png" alt="Covenant Hospital Logo" class="nav-logo">
+          Covenant Hospital
+        </a>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="login.html" class="active">Login</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-toggle">
+            <i class="fas fa-user-circle"></i>
+            <span>Ronny</span>
+            <i class="fas fa-caret-down"></i>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Signup</a></li>
+            <li><a href="#">Profile</a></li>
+          </ul>
+        </div>
+        <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section (Smaller) -->
+  <section class="hero hero-small">
+    <div class="hero-bg" style="background-image:url('images/contact-hero.jpg');"></div>
+    <div class="hero-overlay">
+      <h1>Login</h1>
+      <p>Access your Covenant Hospital account</p>
+    </div>
+  </section>
+
+  <!-- Login Form Section -->
+  <section class="login-section" style="padding:4rem 2rem;">
+    <div class="login-container" style="max-width:400px; margin:0 auto; background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1);">
+      <h2 style="text-align:center; margin-bottom:2rem; color:maroon;">Login to Your Account</h2>
+      <form action="#" method="POST" class="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn login-btn">Login</button>
+      </form>
+      <p style="text-align:center; margin-top:1rem;">Don't have an account? <a href="signup.html" style="color:maroon;">Sign Up</a></p>
+    </div>
+  </section>
+
+  <!-- Accreditation Section -->
+  <section class="accreditation">
+    <h2>Our Accreditation Partners</h2>
+    <div class="partners-slider">
+      <div class="partners-track">
+        <div class="partner-logo"><img src="images/insurance1.jpg" alt="Insurance Partner 1"></div>
+        <div class="partner-logo"><img src="images/insurance2.png" alt="Insurance Partner 2"></div>
+        <div class="partner-logo"><img src="images/insurance3.jpg" alt="Insurance Partner 3"></div>
+        <div class="partner-logo"><img src="images/insurance4.png" alt="Insurance Partner 4"></div>
+        <div class="partner-logo"><img src="images/insurance5.png" alt="Insurance Partner 5"></div>
+        <div class="partner-logo"><img src="images/insurance6.jpg" alt="Insurance Partner 6"></div>
+        <!-- duplicate for infinite loop -->
+        <div class="partner-logo"><img src="images/insurance1.jpg" alt="Insurance Partner 1"></div>
+        <div class="partner-logo"><img src="images/insurance2.png" alt="Insurance Partner 2"></div>
+        <div class="partner-logo"><img src="images/insurance3.jpg" alt="Insurance Partner 3"></div>
+        <div class="partner-logo"><img src="images/insurance4.png" alt="Insurance Partner 4"></div>
+        <div class="partner-logo"><img src="images/insurance5.png" alt="Insurance Partner 5"></div>
+        <div class="partner-logo"><img src="images/insurance6.jpg" alt="Insurance Partner 6"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="main-footer">
+      <div class="footer-section">
+        <div class="footer-logo">
+          <img src="images/logo-footer.png" alt="Covenant Hospital Logo" class="footer-logo">
+          <span class="footer-logo-text">Covenant Hospital</span>
+        </div>
+        <p>Delivering compassionate healthcare to our community.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Follow Us</h3>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-footer">
+      <p>Designed with <i class="fas fa-heart"></i> by 
+        <a href="https://ronnkarani.onrender.com" target="_blank">Ronny</a> | 
+        <a href="https://swftlabs.onrender.com" target="_blank">SWFT LABS</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

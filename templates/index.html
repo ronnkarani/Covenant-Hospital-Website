@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home | Covenant Hospital{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="carousel">
+    {% for slide in hero_slides %}
+      <div class="slide {% if forloop.first %}active{% endif %}" 
+           style="background-image:url('{{ slide.image.url }}');"></div>
+    {% endfor %}
+  </div>
+
+  {% if hero_content %}
+    <div class="hero-content">
+      <h1>{{ hero_content.title }}</h1>
+      <p>{{ hero_content.subtitle }}</p>
+      <div class="hero-buttons">
+            {% if hero_content.button_text %}
+            <a href="{% url 'contact'%}" class="btn">
+                {{ hero_content.button_text }}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+  {% endif %}
+</section>
+
+
+<!-- Cards Section -->
+<section class="cards">
+    {% for card in home_cards %}
+    <div class="card {% if forloop.last %}card-full{% endif %}">
+        <i class="{{ card.icon_class }}"></i>
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- About Section -->
+<section class="about" id="about">
+    <div class="about-container">
+        <div class="about-left">
+            <h2>Our Story</h2>
+            <p>{{ about.story }}</p>
+        </div>
+        <div class="about-right">
+            <div class="about-box">
+                <h3>About Us</h3>
+                <p>{{ about.about_text }}</p>
+            </div>
+            <div class="about-box">
+                <h3>Our Vision</h3>
+                <p>{{  about.vision }}</p>
+            </div>
+            <div class="about-box">
+                <h3>Our Mission</h3>
+                <p>{{ about.mission }}</p>
+            </div>
+        </div>
+    </div>
+    {% if about.video_file.url %}
+    <div class="video-wrapper">
+        <video controls>
+        <iframe src="{{ about_page.video_file.url }}" title="Hospital Tour" frameborder="0" allowfullscreen type="video/mp4"></iframe>
+      </video>
+    </div>
+    {% endif %}
+</section>
+
+
+<!-- Services Section -->
+<section class="services" id="services">
+    <h2>Our Services</h2>
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-item">
+            <i class="{{ service.icon_class }}"></i>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+
+        <!-- Blog Section -->
+<section class="blog" id="blog">
+    <h2>Latest from Our Blog</h2>
+    <div class="blog-container">
+        {% for blog in blogs %}
+        <div class="blog-card">
+            <img src="{{ blog.image.url }}" alt="{{ blog.title }}">
+            <div class="blog-content">
+                <h3>{{ blog.title }}</h3>
+                <div class="blog-meta">
+                    <span><i class="fas fa-user"></i> {{ blog.author }}</span>
+                    <span><i class="fas fa-calendar"></i> {{ blog.date }}</span>
+                    <span><i class="fas fa-heart"></i> {{ blog.likes }}</span>
+                    <span><i class="fas fa-comments"></i> {{ blog.comments }}</span>
+                </div>
+                <p>{{ blog.content|truncatewords:20 }}</p>
+                <a href="#" class="btn readmore">Read More</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No blog posts published at the moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+
+
+<!-- Accreditation Section -->
+{% include "includes/partners.html" %}
+
+
+{% endblock %}

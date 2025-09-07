@@ -1,0 +1,13 @@
+{% load static %}
+
+<section class="accreditation">
+        <h2>Our Accreditation & Insurance Partners</h2>
+        <div class="partners-slider">
+            <div class="partners-track">
+  {% for partner in partners %}
+  <div class="partner-logo"><img src="{{ partner.image.url }}" alt="{{ partner.alt_text }}"></div>
+  {% endfor %}
+</div>
+
+        </div>
+        </section>

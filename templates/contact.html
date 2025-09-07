@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact - Covenant Hospital{% endblock %}
+
+{% block content %}
+<!-- Contact Hero -->
+<section class="hero hero-small">
+  <div class="hero-bg" style="background-image:url('{% static "images/contact-hero.jpg" %}');"></div>
+  <div class="hero-overlay">
+    <h1>Contact Us</h1>
+    <a href="{% url 'contact' %}" class="btn appointment-btn">Book Appointment</a>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+  <div class="contact-container">
+
+    <!-- LEFT SIDE: Info + Form -->
+<div class="contact-left">
+  <div class="contact-info">
+    <h2 class="contact-heading">Get in Touch</h2>
+    <p class="contact-subtext">We’d love to hear from you! Reach us via phone, email, or the form below.</p>
+    <ul class="contact-details">
+      <li><i class="fas fa-map-marker-alt"></i> Nkubu, Kenya</li>
+      <li><i class="fas fa-phone"></i> +254 712 345 678</li>
+      <li><i class="fas fa-envelope"></i> info@covenanthospital.com</li>
+    </ul>
+    <div class="socials">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+  </div>
+
+  <form class="contact-form">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit" class="btn">Send Message</button>
+  </form>
+</div>
+
+
+    <!-- RIGHT SIDE: Map -->
+    <div class="contact-right">
+      <div class="map-info">
+        <h3>Find Us</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Covenant Hospital, Nkubu, Kenya</p>
+        <p><i class="fas fa-clock"></i> Mon - Sat: 8:00 AM - 6:00 PM</p>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Nkubu+Kenya" 
+           target="_blank" class="directions-btn">
+          Get Directions
+        </a>
+      </div>
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.639237395581!2d37.6505!3d-0.1012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18262e13b34b79d1%3A0x7a8f6c6f0a24a12!2sNkubu!5e0!3m2!1sen!2ske!4v1694080123456"
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+
+  </div>
+</section>
+
+<!-- Accreditation Section -->
+{% include "includes/partners.html" %}
+{% endblock %}
