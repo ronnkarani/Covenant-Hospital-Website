@@ -192,3 +192,42 @@ def contact(request):
         return redirect("contact")  # reload page after form submission
 
     return render(request, "contact.html", {"partners": partners})
+
+
+#DASHBOARD VIEWS
+def dashboard(request):
+    # Raw dummy appointments
+    appointments = [
+        {"id": 1, "patient_name": "John Doe", "phone": "0712345678", "date": "2025-09-10", "status": "Pending"},
+        {"id": 2, "patient_name": "Jane Smith", "phone": "0798765432", "date": "2025-09-12", "status": "Concluded"},
+        {"id": 3, "patient_name": "Michael Brown", "phone": "0722334455", "date": "2025-09-15", "status": "Cancelled"},
+    ]
+
+    # Raw dummy patients
+    patients = [
+        {"id": 1, "name": "John Doe", "phone": "0712345678", "department": "Cardiology"},
+        {"id": 2, "name": "Jane Smith", "phone": "0798765432", "department": "Neurology"},
+        {"id": 3, "name": "Michael Brown", "phone": "0722334455", "department": "Orthopedics"},
+    ]
+    
+    # Raw dummy reports
+    reports = [
+        {"id": 1, "title": "Blood Test Results", "date": "2025-09-05", "doctor": "Dr. Adams"},
+        {"id": 2, "title": "X-Ray Analysis", "date": "2025-09-06", "doctor": "Dr. Brown"},
+        {"id": 3, "title": "MRI Scan Report", "date": "2025-09-07", "doctor": "Dr. Carter"},
+    ]
+
+    # Raw dummy messages
+    messages = [
+        {"id": 1, "sender": "Admin", "subject": "System Update"},
+        {"id": 2, "sender": "Patient", "subject": "Appointment Request"},
+        {"id": 3, "sender": "Doctor", "subject": "Lab Results Uploaded"},
+    ]
+
+
+    return render(request, "dashboard.html", {
+        "appointments": appointments,
+        "patients": patients,
+        "reports": reports,
+        "messages": messages
+    })
