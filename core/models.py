@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
+
 
 # HERO SECTION
 class HeroContent(models.Model):
@@ -32,7 +35,6 @@ class HomeCard(models.Model):
 
 # ABOUT SECTION
 class About(models.Model):
-    hero_image = models.ImageField(upload_to="about/", blank=True, null=True)
     story = models.TextField()
     about_text = models.TextField()
     vision = models.TextField()
@@ -66,7 +68,7 @@ class BlogPost(models.Model):
     date = models.DateField(auto_now_add=True)
     category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True, blank=True)
     likes = models.ManyToManyField(User, related_name='blog_likes', blank=True)
-    content = models.TextField()
+    content = RichTextUploadingField()
     image = models.ImageField(upload_to="blogs/")
     views = models.PositiveIntegerField(default=0)
 

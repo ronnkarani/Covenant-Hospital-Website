@@ -6,7 +6,7 @@
 {% block content %}
 <!-- About Hero (smaller) -->
 <section class="hero hero-small">
-  <div class="hero-bg" style="background-image:url('{{ about_page.hero_image.url }}');"></div>
+  <div class="hero-bg" style="background-image:url('{% static "images/contact-hero.jpg" %}');"></div>
   <div class="hero-overlay">
     <h1>About Us</h1>
     <a href="{% url 'contact' %}" class="btn appointment-btn">Book Appointment</a>

@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import HeroSlide,HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment
 
-
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
@@ -25,7 +24,8 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ("blog", "name", "date")
     search_fields = ("name", "text")
     list_filter = ("date",)
-    
+
+
 admin.site.register(HeroContent)
 admin.site.register(HeroSlide)
 admin.site.register(HomeCard)

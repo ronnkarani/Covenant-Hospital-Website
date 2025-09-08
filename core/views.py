@@ -5,8 +5,9 @@ from .forms import CommentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.contrib import messages
-
+from django.conf import settings
 
 #LOGIN VIEW
 def signup_view(request):
@@ -163,6 +164,31 @@ def blog_like(request, pk):
 #CONTACT PAGE
 def contact(request):
     partners = PartnerLogo.objects.all()
+    
 
     return render(request, "contact.html", {        "partners": partners,
 })
+def contact(request):
+    partners = PartnerLogo.objects.all()
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        subject = f"New Contact Form Submission from {name}"
+        full_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+
+        try:
+            send_mail(
+                subject,
+                full_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.EMAIL_HOST_USER],  # receiver = your Gmail
+            )
+            messages.success(request, "Your message has been sent successfully!")
+        except Exception as e:
+            messages.error(request, f"Error sending message: {e}")
+
+        return redirect("contact")  # reload page after form submission
+
+    return render(request, "contact.html", {"partners": partners})
