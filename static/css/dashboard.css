@@ -44,7 +44,20 @@ body {
   position: absolute;
   right: 0;
   top: 40px;
-  background: #fff;
+  background: maroon;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  list-style: none;
+  min-width: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.dashboard-navbar .dropdown-menu:hover {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: rgb(180, 94, 94);
   color: #333;
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -56,10 +69,14 @@ body {
   padding: 10px;
 }
 .dashboard-navbar .dropdown-menu li a {
-  color: maroon;
+  color: #fafafa;
   text-decoration: none;
 }
-.dashboard-navbar .nav-right:hover .dropdown-menu {
+.dashboard-navbar .dropdown-menu li a:hover {
+  color: #250a0a;
+  text-decoration: none;
+}
+.dashboard-navbar .nav-right.open .dropdown-menu {
   display: block;
 }
 
@@ -97,6 +114,22 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+.dashboard-sidebar a {
+  text-decoration: none;   /* removes underline */
+  color: inherit;          /* keeps text same as parent */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Active + hover styling */
+.dashboard-sidebar ul li.active a,
+.dashboard-sidebar ul li a:hover {
+  background: maroon;
+  color: #fff;
+  border-radius: 6px;
+}
+
 .dashboard-sidebar li:hover {
   background: #a52a2a; /* Lighter maroon on hover */
   color: #fff;
@@ -121,18 +154,18 @@ body {
 .user-profile h2 {
   font-size: 22px;
   margin-bottom: 5px;
-  color: maroon;
+  color: rgb(206, 97, 97);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .user-profile .role {
   font-size: 14px;
-  color: #555;
+  color: #181818;
 }
 .user-profile .email {
   font-size: 14px;
-  color: #777;
+  color: #000000;
 }
 
 /* CTA Buttons */
@@ -142,7 +175,7 @@ body {
   gap: 12px;
 }
 .btn-cta {
-  background: maroon;
+  background: rgb(206, 97, 97);
   color: #fff;
   padding: 10px 16px;
   border-radius: 6px;
@@ -151,7 +184,7 @@ body {
   transition: 0.3s;
 }
 .btn-cta:hover {
-  background: #a52a2a;
+  background: rgb(71, 21, 21);
 }
 
 /* Section Header */
@@ -163,13 +196,13 @@ body {
 }
 .section-header h3 {
   font-size: 18px;
-  color: maroon;
+  color: rgb(206, 97, 97);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .btn-view-all {
-  background: #5c1e1e;
+  background: rgb(206, 97, 97);
   color: #fff;
   padding: 6px 12px;
   border-radius: 4px;
@@ -177,7 +210,7 @@ body {
   font-size: 13px;
 }
 .btn-view-all:hover {
-  background: #a52a2a;
+  background: rgb(71, 21, 21);
 }
 
 /* Make tables responsive */
@@ -247,8 +280,8 @@ body {
   text-align: center;
 }
 .patients-table th {
-  background: #e6f0ff;
-  color: #004085;
+  background: #f3e6e6;
+  color: maroon;
 }
 
 /* Reports Section */
@@ -340,6 +373,545 @@ body {
   font-size: 14px;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
+
+/* ---------- Patients page specific styles (namespaced) ---------- */
+
+.patients-page .patients-search {
+  margin: 16px 0;
+}
+
+.patients-page .patients-search-form .patients-search-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.patients-page .patients-search-field {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  min-width: 220px;
+}
+
+.patients-page .patients-search-btn {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  background: rgb(206, 97, 97);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.patients-page .patients-table-wrapper {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+/* Unique table class to avoid collisions */
+.patients-list-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 700px;
+  font-size: 14px;
+}
+
+.patients-list-table thead th {
+  background: #f7eaea;
+  color: maroon;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #e6dede;
+}
+
+.patients-list-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0eaea;
+}
+
+/* Slight zebra for readability (light) */
+.patients-list-table tbody tr:nth-child(even) td {
+  background: #fff;
+}
+
+.patients-list-table tbody tr:nth-child(odd) td {
+  background: #fffdfd;
+}
+
+/* make action buttons consistent but not clash with other button styles */
+.patients-list-table .btn-action {
+  padding: 6px 8px;
+  margin-right: 6px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+/* Pagination */
+.patients-pagination {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.patients-pagination .pagination-list {
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  align-items: center;
+}
+
+.patients-pagination .pagination-list li {
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.patients-pagination .pagination-list li a {
+  text-decoration: none;
+  color: maroon;
+}
+
+.patients-pagination .pagination-list .active-page {
+  background: maroon;
+  color: #fff;
+  font-weight: bold;
+}
+
+.patients-pagination .pagination-list .disabled {
+  color: #bbb;
+}
+
+
+
+/* ---------- Appointments page specific styles ---------- */
+.appointments-page .appointments-search {
+  margin: 16px 0;
+}
+
+.appointments-page .appointments-search-form .appointments-search-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.appointments-page .appointments-search-field {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  min-width: 220px;
+}
+
+.appointments-page .appointments-search-btn {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  background: rgb(206, 97, 97);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+
+/* Table */
+.appointments-page .appointments-table-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+}
+.appointments-page .appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.appointments-page .appointments-table th,
+.appointments-page .appointments-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+.appointments-page .appointments-table th {
+  background: #5c1e1e;
+  color: #fff;
+}
+.appointments-page .appointments-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* Pagination */
+.appointments-page .appointments-pagination {
+  margin-top: 15px;
+  text-align: center;
+}
+.appointments-page .pagination-list {
+  display: inline-flex;
+  list-style: none;
+  gap: 6px;
+}
+.appointments-page .pagination-list li {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.appointments-page .pagination-list li a {
+  text-decoration: none;
+  color: maroon;
+}
+.appointments-page .pagination-list .active-page {
+  background: maroon;
+  color: #fff;
+}
+.appointments-page .pagination-list .disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* ---------- Reports page specific styles ---------- */
+.reports-page .reports-search {
+  margin: 16px 0;
+}
+
+.reports-page .reports-search-form .reports-search-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.reports-page .reports-search-field {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  min-width: 220px;
+}
+
+.reports-page .reports-search-btn {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  background: rgb(206, 97, 97);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+/* Table */
+.reports-page .reports-table-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+}
+.reports-page .reports-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.reports-page .reports-table th,
+.reports-page .reports-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+.reports-page .reports-table th {
+  background: #5c1e1e;
+  color: #fff;
+}
+.reports-page .reports-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* Pagination */
+.reports-page .reports-pagination {
+  margin-top: 15px;
+  text-align: center;
+}
+.reports-page .pagination-list {
+  display: inline-flex;
+  list-style: none;
+  gap: 6px;
+}
+.reports-page .pagination-list li {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.reports-page .pagination-list li a {
+  text-decoration: none;
+  color: maroon;
+}
+.reports-page .pagination-list .active-page {
+  background: maroon;
+  color: #fff;
+}
+.reports-page .pagination-list .disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 768px) {
+  .appointments-page .appointments-search-form .appointments-search-inputs,
+  .reports-page .reports-search-form .reports-search-inputs,
+  .patients-page .patients-search-form .patients-search-inputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .patients-list-table .reports-table,
+  .appointments-table {
+    min-width: 640px; /* allows horizontal scroll; still safe */
+  }
+}
+
+
+/* ===========================
+   Messages page (namespaced)
+   =========================== */
+
+.messages-page { /* container root for messages page */
+  /* nothing required here; used as namespace for child selectors */
+}
+
+/* --- Search (matches patients look) --- */
+.messages-page .messages-search {
+  margin: 16px 0;
+}
+
+.messages-page .messages-search-form .messages-search-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.messages-page .messages-search-field {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  min-width: 220px;
+}
+
+.messages-page .messages-search-btn {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  background: rgb(206, 97, 97);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* --- Cards (two-column grid like other sections) --- */
+.messages-page .messages-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 12px 0 20px;
+}
+
+.messages-page .message-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.messages-page .message-card .card-content h3 {
+  margin-bottom: 6px;
+  color: maroon;
+  font-size: 16px;
+}
+
+.messages-page .message-card .card-count {
+  font-size: 20px;
+  margin: 6px 0;
+}
+
+.messages-page .message-card .card-note {
+  color: #666;
+  font-size: 13px;
+}
+
+.messages-page .message-card .btn-open {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: maroon;
+}
+
+/* unread (green-ish) and all (yellow-ish) card coloring */
+.messages-page .message-card.unread {
+  border-left: 6px solid #2ecc71;
+}
+
+.messages-page .message-card.all {
+  border-left: 6px solid #f0ad4e;
+}
+
+/* hover lift */
+.messages-page .message-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+}
+
+/* --- Messages table (namespaced) --- */
+.messages-page .messages-table-section {
+  margin-top: 18px;
+  background: transparent;
+  border-radius: 12px;
+  padding: 0;
+}
+
+.messages-page .messages-table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.messages-page .messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px; /* allow horizontal scroll on narrow screens */
+}
+
+.messages-page .messages-table th,
+.messages-page .messages-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 14px;
+}
+
+.messages-page .messages-table thead th {
+  background: maroon;
+  color: #fff;
+  font-weight: 600;
+}
+
+.messages-page .messages-table tbody tr:hover {
+  background: #fbfbfb;
+}
+
+/* narrow subject/preview truncation */
+.messages-page .messages-table .subject {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.messages-page .messages-table .preview {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #555;
+}
+
+/* status pills (re-using the status class colors from dashboard.css) */
+.messages-page .status {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.messages-page .status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+.messages-page .status.concluded {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* --- Pagination (namespaced) --- */
+.messages-page .messages-pagination {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.messages-page .messages-pagination .pagination-list {
+  display: inline-flex;
+  list-style: none;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+
+.messages-page .messages-pagination .pagination-list li {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  font-size: 14px;
+}
+
+.messages-page .messages-pagination .pagination-list li a {
+  text-decoration: none;
+  color: maroon;
+}
+
+.messages-page .messages-pagination .pagination-list li.active-page {
+  background: maroon;
+  color: #fff;
+  font-weight: 700;
+  border-color: maroon;
+}
+
+.messages-page .messages-pagination .pagination-list li.disabled {
+  color: #bbb;
+  cursor: not-allowed;
+  background: #fafafa;
+  border-color: #f1f1f1;
+}
+
+/* --- Responsive tweaks --- */
+@media (max-width: 900px) {
+  .messages-page .messages-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .messages-page .messages-table {
+    min-width: 600px;
+  }
+
+  .messages-page .messages-search-field {
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .messages-page .messages-table {
+    min-width: 480px;
+  }
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .messages-page .messages-search-form .messages-search-inputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {

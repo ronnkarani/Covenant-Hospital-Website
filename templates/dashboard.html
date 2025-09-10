@@ -37,14 +37,35 @@
     
     <!-- Sidebar -->
     <aside class="dashboard-sidebar">
-      <ul>
-        <li><i class="fa-solid fa-chart-line"></i> Dashboard</li>
-        <li><i class="fa-solid fa-bed"></i> Patients</li>
-        <li><i class="fa-solid fa-calendar-check"></i> Appointments</li>
-        <li><i class="fa-solid fa-gear"></i> Reports</li>
-        <li><i class="fa-solid fa-user-md"></i> Messages</li>
-      </ul>
-    </aside>
+  <ul>
+    <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <a href="{% url 'dashboard' %}">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
+      <a href="{% url 'patients' %}">
+        <i class="fa-solid fa-bed"></i> Patients
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
+      <a href="{% url 'appointments' %}">
+        <i class="fa-solid fa-calendar-check"></i> Appointments
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+      <a href="{% url 'reports' %}">
+        <i class="fa-solid fa-chart-line"></i> Reports
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
+      <a href="{% url 'messages' %}">
+        <i class="fa-solid fa-user-md"></i> Messages
+      </a>
+    </li>
+  </ul>
+</aside>
+
 
     <!-- Main Content -->
     <main class="dashboard-main">
@@ -57,6 +78,13 @@
     <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
   </section>
 
+  <!-- Call to Action Buttons -->
+  <div class="cta-buttons">
+    <a href="#" class="btn-cta"><i class="fa-solid fa-calendar-plus"></i> New Appointment</a>
+    <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> Add Patient</a>
+    <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
+  </div>
+
   <!-- Messages Section -->
   <section class="messages">
     <div class="messages-card">
@@ -65,13 +93,6 @@
       <a href="#" class="btn-messages">View Messages</a>
     </div>
   </section>
-
-  <!-- Call to Action Buttons -->
-  <div class="cta-buttons">
-    <a href="#" class="btn-cta"><i class="fa-solid fa-calendar-plus"></i> New Appointment</a>
-    <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> Add Patient</a>
-    <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
-  </div>
 
   <!-- Upcoming Appointments -->
 <section class="appointments">

@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Messages — Covenant Hospital</title>
+
+  <!-- Global dashboard CSS -->
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+  <!-- fontawesome (matching your other pages) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR (same structure as other pages) -->
+  <nav class="dashboard-navbar">
+    <div class="nav-left">
+      <i class="fa-solid fa-bars menu-toggle"></i>  <!-- IMPORTANT: 'menu-toggle' matches dashboard.js -->
+      <i class="fa-solid fa-hospital"></i>
+      <span class="nav-title">Covenant Hospital Portal</span>
+    </div>
+
+    <div class="nav-right">
+      <i class="fa-solid fa-user-circle"></i>
+      <span class="username">{{ user.username }}</span>
+      <i class="fa-solid fa-caret-down dropdown-toggle"></i>
+
+      <ul class="dropdown-menu">
+        <li><a href="#">Profile</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li><a href="{% url 'index' %}">Back to Website</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN LAYOUT (container is same class as other pages) -->
+  <div class="dashboard-container messages-page">
+
+    <!-- SIDEBAR (same markup / active link pattern used elsewhere) -->
+    <aside class="dashboard-sidebar">
+      <ul>
+        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+          <a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
+          <a href="{% url 'patients' %}"><i class="fa-solid fa-bed"></i> Patients</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
+          <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+          <a href="{% url 'reports' %}"><i class="fa-solid fa-chart-line"></i> Reports</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
+          <a href="{% url 'messages' %}"><i class="fa-solid fa-envelope"></i> Messages</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- PAGE MAIN -->
+    <main class="dashboard-main">
+
+      <!-- PROFILE SECTION (matches your dashboard/patients layout) -->
+      <section class="user-profile">
+        <h2><i class="fa-solid fa-user-circle"></i> Welcome,
+          <span class="username">{{ user.username }}</span>
+        </h2>
+        <p class="role">Doctor - Communications</p>
+        <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
+      </section>
+
+      <!-- CTA Buttons (same look/placement as other pages) -->
+      <div class="cta-buttons">
+        <a href="#" class="btn-cta"><i class="fa-solid fa-plus"></i> Compose</a>
+        <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> New Contact</a>
+        <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
+      </div>
+
+      <!-- SEARCH (styled like patients — namespaced) -->
+      <section class="messages-search">
+        <form method="get" class="messages-search-form" action="{% url 'messages' %}">
+          <div class="messages-search-inputs">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search messages by sender, subject, or content..."
+              value="{{ request.GET.q|default:'' }}"
+              class="messages-search-field"
+              autocomplete="off"
+            />
+            <button type="submit" class="messages-search-btn">Search</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- CARDS -->
+      <section class="messages-cards">
+        <div class="message-card unread">
+          <div class="card-content">
+            <h3>Unread Messages</h3>
+            <p class="card-count"><strong>{{ unread_count }}</strong></p>
+            <p class="card-note">Messages awaiting your attention</p>
+          </div>
+          <div class="card-actions">
+            <a href="#messages-table" class="btn-open">Open</a>
+          </div>
+        </div>
+
+        <div class="message-card all">
+          <div class="card-content">
+            <h3>All Messages</h3>
+            <p class="card-count"><strong>{{ total_messages }}</strong></p>
+            <p class="card-note">All messages in the inbox</p>
+          </div>
+          <div class="card-actions">
+            <a href="#messages-table" class="btn-open">Open</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- MESSAGES TABLE (namespaced, responsive) -->
+      <section id="messages-table" class="messages-table-section">
+        <div class="messages-table-wrapper">
+          <table class="messages-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Content</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for msg in page_obj %}
+                <tr>
+                  <td>{{ msg.id }}</td>
+                  <td>{{ msg.sender }}</td>
+                  <td class="subject">{{ msg.subject }}</td>
+                  <td class="preview">{{ msg.content }}</td>
+                  <td>
+                    {% if msg.status == "unread" %}
+                      <span class="status pending">Unread</span>
+                    {% else %}
+                      <span class="status concluded">Read</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="5">No messages found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION (preserve q param) -->
+        <div class="messages-pagination">
+          <nav aria-label="Messages navigation">
+            <ul class="pagination-list">
+              {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Prev</a></li>
+              {% else %}
+                <li class="disabled">&laquo; Prev</li>
+              {% endif %}
+
+              {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                  <li class="active-page">{{ num }}</li>
+                {% else %}
+                  <li><a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+                {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next &raquo;</a></li>
+              {% else %}
+                <li class="disabled">Next &raquo;</li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer (same as site) -->
+  <footer class="dashboard-footer">
+    <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
+  </footer>
+
+  <!-- separate JS (your global dashboard.js — contains menu toggle + collapse behaviour) -->
+  <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>
