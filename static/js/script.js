@@ -68,17 +68,22 @@ navItems.forEach(link => {
 const userDropdown = document.querySelector('.user-dropdown');
 const userToggle = document.querySelector('.user-toggle');
 
-userToggle.addEventListener('click', (e) => {
-  e.preventDefault();
-  userDropdown.classList.toggle('active');
-});
+if (userToggle && userDropdown) {
+  // Toggle dropdown when clicking on the user toggle
+  userToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // prevent closing immediately
+    userDropdown.classList.toggle('active');
+  });
 
-// Close dropdown if clicked outside
-document.addEventListener('click', (e) => {
-  if (!userDropdown.contains(e.target)) {
-    userDropdown.classList.remove('active');
-  }
-});
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!userDropdown.contains(e.target) && !userToggle.contains(e.target)) {
+      userDropdown.classList.remove('active');
+    }
+  });
+}
+
 
 // static/js/messages.js
 
