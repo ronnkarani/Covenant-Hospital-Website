@@ -90,7 +90,7 @@ body {
 /* Sidebar */
 .dashboard-sidebar {
   width: 220px;
-  background: #5c1e1e; /* Dark maroon */
+  background: #773131; /* Dark maroon */
   color: #fff;
   padding: 20px 0;
   transition: transform 0.3s ease;
@@ -420,8 +420,8 @@ body {
 }
 
 .patients-list-table thead th {
-  background: #f7eaea;
-  color: maroon;
+  background: #5c1e1e;
+  color: #fff;
   text-align: left;
   padding: 12px;
   border-bottom: 1px solid #e6dede;

@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="dashboard-navbar">
+    <div class="nav-left">
+      <i class="fa-solid fa-bars menu-toggle"></i>
+      <i class="fa-solid fa-hospital"></i>
+      <span class="nav-title">Covenant Hospital Portal</span>
+    </div>
+    <div class="nav-right">
+      <i class="fa-solid fa-user-circle"></i>
+      <span class="username">{{ user.username }}</span>
+      <i class="fa-solid fa-caret-down dropdown-toggle"></i>
+      <ul class="dropdown-menu">
+        <li><a href="#">Profile</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li><a href="{% url 'index' %}">Back to Website</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <ul>
+        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+          <a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
+          <a href="{% url 'patients' %}"><i class="fa-solid fa-bed"></i> Patients</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
+          <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+          <a href="{% url 'reports' %}"><i class="fa-solid fa-chart-line"></i> Reports</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
+          <a href="{% url 'messages' %}"><i class="fa-solid fa-user-md"></i> Messages</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="dashboard-footer">
+    <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
+  </footer>
+
+  <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

@@ -94,51 +94,12 @@
     </div>
   </section>
 
-  <!-- Upcoming Appointments -->
-<section class="appointments">
-  <div class="section-header">
-    <h3><i class="fa-solid fa-calendar-check"></i> Upcoming Appointments</h3>
-    <a href="#" class="btn-view-all">View All</a>
-  </div>
-  <div class="table-wrapper">
-    <table class="appointments-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Patient Name</th>
-          <th>Phone</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for appointment in appointments %}
-        <tr>
-          <td>{{ appointment.id }}</td>
-          <td>{{ appointment.patient_name }}</td>
-          <td>{{ appointment.phone }}</td>
-          <td>{{ appointment.date }}</td>
-          <td>
-            <span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span>
-          </td>
-          <td>
-            <a href="#" class="btn-action view">View</a>
-            <a href="#" class="btn-action update">Update</a>
-            <a href="#" class="btn-action delete">Delete</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
 
 
-  <section class="patients">
+<section class="patients">
   <div class="section-header">
     <h3><i class="fa-solid fa-users"></i> Recent Patients</h3>
-    <a href="#" class="btn-view-all">View All</a>
+    <a href="{% url 'patients' %}" class="btn-view-all">View All</a>
   </div>
   <div class="table-wrapper">
     <table class="patients-table">
@@ -148,57 +109,112 @@
           <th>Name</th>
           <th>Phone</th>
           <th>Department</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for patient in patients %}
+        {% for p in patients %}
         <tr>
-          <td>{{ patient.id }}</td>
-          <td>{{ patient.name }}</td>
-          <td>{{ patient.phone }}</td>
-          <td>{{ patient.department }}</td>
+          <td>{{ p.id }}</td>
+          <td class="patient-name">{{ p.name }}</td>
+          <td>{{ p.phone }}</td>
+          <td>{{ p.department }}</td>
+          <td>{{ p.age }}</td>
+          <td>{{ p.gender }}</td>
+          <td>
+            <a href="" class="btn-action view">View</a>
+            <a href="" class="btn-action update">Edit</a>
+            <a href="" class="btn-action delete">Delete</a>
+          </td>
         </tr>
+        {% empty %}
+        <tr><td colspan="7">No patients found.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </section>
 
-  <!-- Reports Section -->
-  <section class="reports">
-    <div class="section-header">
-      <h3><i class="fa-solid fa-file-medical"></i> Recent Reports</h3>
-      <a href="#" class="btn-view-all">View All</a>
-    </div>
-    <div class="table-wrapper">
-      <table class="reports-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Report Title</th>
-            <th>Date</th>
-            <th>Doctor</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for report in reports %}
-          <tr>
-            <td>{{ report.id }}</td>
-            <td>{{ report.title }}</td>
-            <td>{{ report.date }}</td>
-            <td>{{ report.doctor }}</td>
-            <td>
-              <a href="#" class="btn-report view">View</a>
-              <a href="#" class="btn-report update">Update</a>
-              <a href="#" class="btn-report delete">Delete</a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </section>
+
+<!-- ================== RECENT APPOINTMENTS ================== -->
+<section class="appointments">
+  <div class="section-header">
+    <h3><i class="fa-solid fa-calendar-check"></i> Recent Appointments</h3>
+    <a href="{% url 'appointments' %}" class="btn-view-all">View All</a>
+  </div>
+  <div class="table-wrapper">
+    <table class="appointments-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Patient</th>
+          <th>Phone</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appt in appointments %}
+        <tr>
+          <td>{{ appt.id }}</td>
+          <td>{{ appt.patient.name }}</td>
+          <td>{{ appt.patient.phone }}</td>
+          <td>{{ appt.date }}</td>
+          <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
+          <td>
+            <a href="#" class="btn-action view">View</a>
+            <a href="#" class="btn-action update">Update</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No appointments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ================== RECENT REPORTS ================== -->
+<section class="reports">
+  <div class="section-header">
+    <h3><i class="fa-solid fa-file-medical"></i> Recent Reports</h3>
+    <a href="{% url 'reports' %}" class="btn-view-all">View All</a>
+  </div>
+  <div class="table-wrapper">
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rep in reports %}
+        <tr>
+          <td>{{ rep.id }}</td>
+          <td>{{ rep.title }}</td>
+          <td>{{ rep.date }}</td>
+          <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
+          <td>
+            <a href="#" class="btn-action view">View</a>
+            <a href="#" class="btn-action update">Update</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No reports found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
 
   
 

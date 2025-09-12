@@ -5,6 +5,21 @@ from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 
 
+#USER MODEL
+
+class Profile(models.Model):
+    ROLE_CHOICES = (
+        ('doctor', 'Doctor'),
+        ('patient', 'Patient'),
+    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='patient')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+
+
 # HERO SECTION
 class HeroContent(models.Model):
     title = models.CharField(max_length=200)
@@ -95,3 +110,83 @@ class PartnerLogo(models.Model):
 
     def __str__(self):
         return self.alt_text
+
+
+# PATIENT MODEL
+class Patient(models.Model):
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
+    name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=20)
+    age = models.PositiveIntegerField()
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    department = models.CharField(max_length=100)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+# DOCTOR MODEL
+class Doctor(models.Model):
+    name = models.CharField(max_length=200)
+    specialty = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    department = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Dr. {self.name} - {self.specialty}"
+
+
+# APPOINTMENT MODEL
+class Appointment(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('concluded', 'Concluded'),
+        ('cancelled', 'Cancelled'),
+    )
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="appointments")
+    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True, related_name="appointments")
+    date = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"{self.patient.name} with {self.doctor} on {self.date}"
+
+
+# REPORT MODEL
+class Report(models.Model):
+    STATUS_CHOICES = (
+        ('approved', 'Approved'),
+        ('pending', 'Pending'),
+        ('rejected', 'Rejected'),
+    )
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="reports")
+    date = models.DateField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    content = RichTextField()
+
+    def __str__(self):
+        return self.title
+
+
+# MESSAGE MODEL
+class Message(models.Model):
+    STATUS_CHOICES = (
+        ('unread', 'Unread'),
+        ('read', 'Read'),
+    )
+    sender = models.CharField(max_length=200)
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
+    subject = models.CharField(max_length=200)
+    content = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='unread')
+    date_sent = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.subject} from {self.sender}"

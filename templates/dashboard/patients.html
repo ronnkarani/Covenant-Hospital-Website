@@ -88,13 +88,14 @@
         <form method="get" class="patients-search-form" action="{% url 'patients' %}">
           <div class="patients-search-inputs">
             <input
-              type="text"
-              name="q"
-              placeholder="Search patients by name, phone or department..."
-              value="{{ request.GET.q|default:'' }}"
-              class="patients-search-field"
-              autocomplete="off"
-            />
+  type="text"
+  name="q"
+  placeholder="Search patients by name, phone or department..."
+  value="{{ query }}"
+  class="patients-search-field"
+  autocomplete="off"
+/>
+
             <button type="submit" class="patients-search-btn">Search</button>
           </div>
         </form>
@@ -122,22 +123,23 @@
             </thead>
             <tbody>
               {% for p in patients_page %}
-                <tr>
-                  <td>{{ p.id }}</td>
-                  <td class="patient-name">{{ p.name }}</td>
-                  <td>{{ p.phone }}</td>
-                  <td>{{ p.department }}</td>
-                  <td>{{ p.age }}</td>
-                  <td>{{ p.gender }}</td>
-                  <td>
-                    <a href="#" class="btn-action view">View</a>
-                    <a href="#" class="btn-action update">Edit</a>
-                    <a href="#" class="btn-action delete">Delete</a>
-                  </td>
-                </tr>
-              {% empty %}
-                <tr><td colspan="7">No patients found.</td></tr>
-              {% endfor %}
+<tr>
+  <td>{{ p.id }}</td>
+  <td class="patient-name">{{ p.name }}</td>
+  <td>{{ p.phone }}</td>
+  <td>{{ p.department }}</td>
+  <td>{{ p.age }}</td>
+  <td>{{ p.gender }}</td>
+  <td>
+    <a href="" class="btn-action view">View</a>
+    <a href="" class="btn-action update">Edit</a>
+    <a href="" class="btn-action delete">Delete</a>
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="7">No patients found.</td></tr>
+{% endfor %}
+
             </tbody>
           </table>
         </div>

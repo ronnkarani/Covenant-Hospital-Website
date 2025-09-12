@@ -116,8 +116,8 @@
         {% for appt in appointments %}
         <tr>
           <td>{{ appt.id }}</td>
-          <td>{{ appt.patient_name }}</td>
-          <td>{{ appt.phone }}</td>
+          <td>{{ appt.patient.name }}</td>
+          <td>{{ appt.patient.phone }}</td>
           <td>{{ appt.date }}</td>
           <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
           <td>

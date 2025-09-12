@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import HeroSlide,HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment
+from .models import HeroSlide,HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment, Profile,Patient, Doctor, Appointment, Report, Message
+
+
 
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):
@@ -32,3 +34,9 @@ admin.site.register(HomeCard)
 admin.site.register(About)
 admin.site.register(Service)
 admin.site.register(PartnerLogo)
+
+admin.site.register(Patient)
+admin.site.register(Doctor)
+admin.site.register(Appointment)
+admin.site.register(Report)
+admin.site.register(Message)
