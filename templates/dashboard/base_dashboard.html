@@ -4,11 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Dashboard{% endblock %}</title>
+  <title>{% block title %}Covenant Hospital{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    {% block extra_css %}{% endblock %}
-
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
 
@@ -21,49 +20,98 @@
     </div>
     <div class="nav-right">
       <i class="fa-solid fa-user-circle"></i>
-      <span class="username">{{ user.username }}</span>
+      <span class="username">{{session_name}}</span>
       <i class="fa-solid fa-caret-down dropdown-toggle"></i>
       <ul class="dropdown-menu">
-        <li><a href="#">Profile</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'index' %}">Back to Website</a></li>
+        {% if session_role %}
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+          <li><a href="{% url 'index' %}">Back to Website</a></li>
+          {% endif %}
+        
       </ul>
     </div>
   </nav>
 
-  <div class="dashboard-container">
+  <!-- Main Layout -->
+  <div class="dashboard-container {% block page_class %}{% endblock %}">
     <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-      <ul>
-        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-          <a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
-          <a href="{% url 'patients' %}"><i class="fa-solid fa-bed"></i> Patients</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
-          <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-          <a href="{% url 'reports' %}"><i class="fa-solid fa-chart-line"></i> Reports</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-          <a href="{% url 'messages' %}"><i class="fa-solid fa-user-md"></i> Messages</a>
-        </li>
-      </ul>
-    </aside>
+    <!-- Sidebar -->
+<aside class="dashboard-sidebar">
+  <ul>
+    <!-- Always show Dashboard -->
+    <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    </li>
 
-    <!-- Main Content -->
+    {% if request.session.user_role == "doctor" %}
+      <!-- Doctor sees everything -->
+      <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
+        <a href="{% url 'patients' %}"><i class="fa-solid fa-bed"></i> Patients</a>
+      </li>
+      <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
+        <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+      </li>
+      <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+        <a href="{% url 'reports' %}"><i class="fa-solid fa-clipboard-list"></i> Reports</a>
+      </li>
+      <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
+        <a href="{% url 'messages' %}"><i class="fa-solid fa-user-md"></i> Messages</a>
+      </li>
+
+    {% elif request.session.user_role == "patient" %}
+      <!-- Patient sees only Dashboard, Appointments, Messages -->
+      <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
+        <a href="{% url 'appointments' %}"><i class="fa-solid fa-clipboard-list"></i> Your Records</a>
+      </li>
+      <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
+        <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+      </li>
+      
+    {% endif %}
+  </ul>
+</aside>
+
+
+
+    <!-- Page Content -->
     <main class="dashboard-main">
+      <!-- Profile Section -->
+      <section class="user-profile">
+        <h2><i class="fa-solid fa-user-circle"></i> Welcome, 
+          <span class="username">{{ session_name }}</span>
+        </h2>
+        <p class="role">Doctor - Cardiology Department</p>
+        <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
+      </section>
+
+        <!-- ================== CTA CARDS ================== -->
+        <div class="cta-buttons">
+  {% if session_role == "doctor" %}
+    <a href="{% url 'new_appointment' %}" class="btn-cta">
+      <i class="fa-solid fa-calendar-plus"></i> New Appointment
+    </a>
+    <a href="{% url 'add_patient' %}" class="btn-cta">
+      <i class="fa-solid fa-user-plus"></i> Add Patient
+    </a>
+    <a href="{% url 'reports' %}" class="btn-cta">
+      <i class="fa-solid fa-file-medical"></i> Reports
+    </a>
+  {% elif session_role == "patient" %}
+    <a href="" class="btn-cta">
+      <i class="fa-solid fa-calendar-plus"></i> Book Appointment
+    </a>
+  {% endif %}
+</div>
       {% block content %}{% endblock %}
     </main>
   </div>
+
+  <script src="{% static 'js/dashboard.js' %}"></script>
 
   <!-- Footer -->
   <footer class="dashboard-footer">
     <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
   </footer>
-
-  <script src="{% static 'js/dashboard.js' %}"></script>
 </body>
 </html>

@@ -1,197 +1,137 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Patients - Covenant Hospital</title>
-  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% extends "dashboard/base_dashboard.html" %}
 
-</head>
-<body>
+{% block title %}Patients{% endblock %}
+{% block page_class %}patients-page{% endblock %}
 
-  <!-- Navbar -->
-  <nav class="dashboard-navbar">
-    <div class="nav-left">
-      <i class="fa-solid fa-bars menu-toggle"></i>
-      <i class="fa-solid fa-hospital"></i>
-      <span class="nav-title">Covenant Hospital Portal</span>
-    </div>
+{% block content %}
+  
 
-    <div class="nav-right">
-      <i class="fa-solid fa-user-circle"></i>
-      <span class="username">{{ user.username }}</span>
-      <i class="fa-solid fa-caret-down dropdown-toggle"></i>
-      <ul class="dropdown-menu">
-        <li><a href="#">Profile</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'index' %}">Back to Website</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Main Layout -->
-  <div class="dashboard-container">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-      <ul>
-        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <a href="{% url 'dashboard' %}">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
-      <a href="{% url 'patients' %}">
-        <i class="fa-solid fa-bed"></i> Patients
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
-      <a href="{% url 'appointments' %}">
-        <i class="fa-solid fa-calendar-check"></i> Appointments
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-      <a href="{% url 'reports' %}">
-        <i class="fa-solid fa-chart-line"></i> Reports
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-      <a href="{% url 'messages' %}">
-        <i class="fa-solid fa-user-md"></i> Messages
-      </a>
-    </li>
-  </ul>
-    </aside>
-
-
-    <!-- Main Content -->
-    <main class="dashboard-main patients-page">
-      <!-- Profile Section (same as dashboard) -->
-      <section class="user-profile">
-        <h2><i class="fa-solid fa-user-circle"></i> Welcome, 
-          <span class="username">{{ user.username }}</span>
-        </h2>
-        <p class="role">Doctor - Cardiology Department</p>
-        <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
-      </section>
-
-      <!-- CTA Buttons (same as dashboard) -->
-      <div class="cta-buttons">
-        <a href="#" class="btn-cta"><i class="fa-solid fa-calendar-plus"></i> New Appointment</a>
-        <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> Add Patient</a>
-        <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
+  <!-- Search Bar -->
+  <section class="patients-search">
+    <form method="get" class="patients-search-form" action="{% url 'patients' %}">
+      <div class="patients-search-inputs">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search patients..."
+          value="{{ query }}"
+          class="patients-search-field"
+          autocomplete="off"
+        />
+        <button type="submit" class="patients-search-btn">Search</button>
       </div>
+    </form>
+  </section>
 
-      <!-- Search Bar (namespaced) -->
-      <section class="patients-search">
-        <form method="get" class="patients-search-form" action="{% url 'patients' %}">
-          <div class="patients-search-inputs">
-            <input
-  type="text"
-  name="q"
-  placeholder="Search patients by name, phone or department..."
-  value="{{ query }}"
-  class="patients-search-field"
-  autocomplete="off"
-/>
-
-            <button type="submit" class="patients-search-btn">Search</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Patients Table -->
-      <section class="patients-list-section">
-        <div class="section-header">
-          <h3><i class="fa-solid fa-users"></i> Patients</h3>
-          <a href="#" class="btn-view-all">Add New</a>
-        </div>
-
-        <div class="table-wrapper patients-table-wrapper">
-          <table class="patients-list-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Department</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for p in patients_page %}
-<tr>
-  <td>{{ p.id }}</td>
-  <td class="patient-name">{{ p.name }}</td>
-  <td>{{ p.phone }}</td>
-  <td>{{ p.department }}</td>
-  <td>{{ p.age }}</td>
-  <td>{{ p.gender }}</td>
-  <td>
-    <a href="" class="btn-action view">View</a>
-    <a href="" class="btn-action update">Edit</a>
-    <a href="" class="btn-action delete">Delete</a>
-  </td>
-</tr>
-{% empty %}
-<tr><td colspan="7">No patients found.</td></tr>
-{% endfor %}
-
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Pagination (preserve query parameter) -->
-<div class="patients-pagination">
-  <nav aria-label="Page navigation">
-    <ul class="pagination-list">
-      {% if patients_page.has_previous %}
-        <li>
-          <a href="?page={{ patients_page.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
-            &laquo; Prev
-          </a>
-        </li>
-      {% else %}
-        <li class="disabled">&laquo; Prev</li>
-      {% endif %}
-
-      {% for num in patients_page.paginator.page_range %}
-        {% if num == patients_page.number %}
-          <li class="active-page">{{ num }}</li>
-        {% else %}
-          <li>
-            <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
-          </li>
-        {% endif %}
-      {% endfor %}
-
-      {% if patients_page.has_next %}
-        <li>
-          <a href="?page={{ patients_page.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
-            Next &raquo;
-          </a>
-        </li>
-      {% else %}
-        <li class="disabled">Next &raquo;</li>
-      {% endif %}
-    </ul>
-  </nav>
+  <!-- Patients Table -->
+  <section class="patients-list-section">
+    <div class="section-header">
+  {% if role == "doctor" %}
+    <h3><i class="fa-solid fa-users"></i> Patients</h3>
+    <a href="#" class="btn-view-all">Add New</a>
+  {% elif role == "patient" %}
+    <h3><i class="fa-solid fa-user"></i> Your Patient Record</h3>
+  {% endif %}
 </div>
 
-      </section>
 
-    </main>
-  </div>
+    <div class="table-wrapper patients-table-wrapper">
+      <table class="patients-list-table">
+        <thead>
+  <tr>
+    {% if role == "doctor" %}
+      <th>ID</th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Department</th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>Actions</th>
+    {% elif role == "patient" %}
+      <th>ID</th>
+      <th>Name</th>
+      <th>Department</th>
+      <th>Doctor</th>
+      <th>Date</th>
+    {% endif %}
+  </tr>
+</thead>
+<tbody>
+  {% for p in patients_page %}
+    {% if role == "doctor" %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td class="patient-name">{{ p.name }}</td>
+        <td>{{ p.phone }}</td>
+        <td>{{ p.department }}</td>
+        <td>{{ p.age }}</td>
+        <td>{{ p.gender }}</td>
+        <td>
+          <a href="" class="btn-action view">View</a>
+          <a href="" class="btn-action update">Edit</a>
+          <a href="" class="btn-action delete">Delete</a>
+        </td>
+      </tr>
+    {% elif role == "patient" %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td class="patient-name">{{ p.name }}</td>
+        <td>{{ p.department }}</td>
+        <td>
+          {% with appt=p.appointments.first %}
+            {% if appt and appt.doctor %}Dr. {{ appt.doctor.name }}{% else %}N/A{% endif %}
+          {% endwith %}
+        </td>
+        <td>
+          {% with appt=p.appointments.first %}
+            {% if appt %}{{ appt.date|date:"Y-m-d H:i" }}{% else %}N/A{% endif %}
+          {% endwith %}
+        </td>
+      </tr>
+    {% endif %}
+  {% empty %}
+    <tr><td colspan="7">No patients found.</td></tr>
+  {% endfor %}
+</tbody>
 
-  <script src="{% static 'js/dashboard.js' %}"></script>
+      </table>
+    </div>
 
-  <!-- Footer -->
-  <footer class="dashboard-footer">
-    <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
-  </footer>
+    <!-- Pagination -->
+    <div class="patients-pagination">
+      <nav aria-label="Page navigation">
+        <ul class="pagination-list">
+          {% if patients_page.has_previous %}
+            <li>
+              <a href="?page={{ patients_page.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                &laquo; Prev
+              </a>
+            </li>
+          {% else %}
+            <li class="disabled">&laquo; Prev</li>
+          {% endif %}
 
-</body>
-</html>
+          {% for num in patients_page.paginator.page_range %}
+            {% if num == patients_page.number %}
+              <li class="active-page">{{ num }}</li>
+            {% else %}
+              <li>
+                <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if patients_page.has_next %}
+            <li>
+              <a href="?page={{ patients_page.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                Next &raquo;
+              </a>
+            </li>
+          {% else %}
+            <li class="disabled">Next &raquo;</li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </section>
+{% endblock %}

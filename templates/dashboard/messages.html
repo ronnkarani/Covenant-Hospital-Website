@@ -1,82 +1,9 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Messages — Covenant Hospital</title>
+{% extends "dashboard/base_dashboard.html" %}
 
-  <!-- Global dashboard CSS -->
-  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% block title %}Messages{% endblock %}
+{% block page_class %}messages-page{% endblock %}
 
-  <!-- fontawesome (matching your other pages) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-
-  <!-- NAVBAR (same structure as other pages) -->
-  <nav class="dashboard-navbar">
-    <div class="nav-left">
-      <i class="fa-solid fa-bars menu-toggle"></i>  <!-- IMPORTANT: 'menu-toggle' matches dashboard.js -->
-      <i class="fa-solid fa-hospital"></i>
-      <span class="nav-title">Covenant Hospital Portal</span>
-    </div>
-
-    <div class="nav-right">
-      <i class="fa-solid fa-user-circle"></i>
-      <span class="username">{{ user.username }}</span>
-      <i class="fa-solid fa-caret-down dropdown-toggle"></i>
-
-      <ul class="dropdown-menu">
-        <li><a href="#">Profile</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'index' %}">Back to Website</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- MAIN LAYOUT (container is same class as other pages) -->
-  <div class="dashboard-container messages-page">
-
-    <!-- SIDEBAR (same markup / active link pattern used elsewhere) -->
-    <aside class="dashboard-sidebar">
-      <ul>
-        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-          <a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
-          <a href="{% url 'patients' %}"><i class="fa-solid fa-bed"></i> Patients</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
-          <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-          <a href="{% url 'reports' %}"><i class="fa-solid fa-chart-line"></i> Reports</a>
-        </li>
-        <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-          <a href="{% url 'messages' %}"><i class="fa-solid fa-envelope"></i> Messages</a>
-        </li>
-      </ul>
-    </aside>
-
-    <!-- PAGE MAIN -->
-    <main class="dashboard-main">
-
-      <!-- PROFILE SECTION (matches your dashboard/patients layout) -->
-      <section class="user-profile">
-        <h2><i class="fa-solid fa-user-circle"></i> Welcome,
-          <span class="username">{{ user.username }}</span>
-        </h2>
-        <p class="role">Doctor - Communications</p>
-        <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
-      </section>
-
-      <!-- CTA Buttons (same look/placement as other pages) -->
-      <div class="cta-buttons">
-        <a href="#" class="btn-cta"><i class="fa-solid fa-plus"></i> Compose</a>
-        <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> New Contact</a>
-        <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
-      </div>
+{% block content %}
 
       <!-- SEARCH (styled like patients — namespaced) -->
       <section class="messages-search">
@@ -182,16 +109,5 @@
           </nav>
         </div>
       </section>
+{% endblock %}
 
-    </main>
-  </div>
-
-  <!-- Footer (same as site) -->
-  <footer class="dashboard-footer">
-    <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
-  </footer>
-
-  <!-- separate JS (your global dashboard.js — contains menu toggle + collapse behaviour) -->
-  <script src="{% static 'js/dashboard.js' %}"></script>
-</body>
-</html>

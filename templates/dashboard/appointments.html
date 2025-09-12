@@ -1,172 +1,91 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Appointments</title>
-  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
+{% extends "dashboard/base_dashboard.html" %}
 
-  <!-- Navbar -->
-  <nav class="dashboard-navbar">
-    <div class="nav-left">
-      <i class="fa-solid fa-bars menu-toggle"></i>
-      <i class="fa-solid fa-hospital"></i>
-      <span class="nav-title">Covenant Hospital Portal</span>
-    </div>
-    <div class="nav-right">
-      <i class="fa-solid fa-user-circle"></i>
-      <span class="username">{{ user.username }}</span>
-      <i class="fa-solid fa-caret-down dropdown-toggle"></i>
-      <ul class="dropdown-menu">
-        <li><a href="#">Profile</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'index' %}">Back to Website</a></li>
-      </ul>
-    </div>
-  </nav>
+{% block title %}Appointments{% endblock %}
+{% block page_class %}appointments-page{% endblock %}
 
-  <div class="dashboard-container appointments-page">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-      <ul>
-        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <a href="{% url 'dashboard' %}">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
-      <a href="{% url 'patients' %}">
-        <i class="fa-solid fa-bed"></i> Patients
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
-      <a href="{% url 'appointments' %}">
-        <i class="fa-solid fa-calendar-check"></i> Appointments
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-      <a href="{% url 'reports' %}">
-        <i class="fa-solid fa-chart-line"></i> Reports
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-      <a href="{% url 'messages' %}">
-        <i class="fa-solid fa-user-md"></i> Messages
-      </a>
-    </li>
-  </ul>
-</aside>
-
-    <!-- Main -->
-    <main class="dashboard-main">
-      <!-- Profile -->
-      <section class="user-profile">
-        <h2><i class="fa-solid fa-user-circle"></i> Welcome, <span class="username">{{ user.username }}</span></h2>
-        <p class="role">Doctor - Cardiology Department</p>
-        <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
-      </section>
-
-      <!-- CTA -->
-      <div class="cta-buttons">
-        <a href="#" class="btn-cta"><i class="fa-solid fa-calendar-plus"></i> New Appointment</a>
-        <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> Add Patient</a>
-        <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
-      </div>
+{% block content %}
 
       <!-- Search -->
       <!-- Appointments Search (same structure as patients) -->
-<section class="appointments-search">
-  <form method="get" class="appointments-search-form" action="{% url 'appointments' %}">
-    <div class="appointments-search-inputs">
-      <input
-        type="text"
-        name="q"
-        placeholder="Search by patient name..."
-        value="{{ request.GET.q|default:'' }}"
-        class="appointments-search-field"
-        autocomplete="off"
-      />
-      <button type="submit" class="appointments-search-btn">Search</button>
-    </div>
-  </form>
-</section>
-<section class="appointments-list-section">
-  <div class="section-header">
-    <h3><i class="fa-solid fa-calendar-check"></i> Appointments</h3>
-    <a href="#" class="btn-view-all">Add New</a>
-  </div>
+      <section class="appointments-search">
+        <form method="get" class="appointments-search-form" action="{% url 'appointments' %}">
+          <div class="appointments-search-inputs">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search by patient name..."
+              value="{{ request.GET.q|default:'' }}"
+              class="appointments-search-field"
+              autocomplete="off"
+            />
+            <button type="submit" class="appointments-search-btn">Search</button>
+          </div>
+        </form>
+      </section>
 
-  <div class="appointments-table-wrapper">
-    <table class="appointments-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Patient</th>
-          <th>Phone</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for appt in appointments %}
-        <tr>
-          <td>{{ appt.id }}</td>
-          <td>{{ appt.patient.name }}</td>
-          <td>{{ appt.patient.phone }}</td>
-          <td>{{ appt.date }}</td>
-          <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
-          <td>
-            <a href="#" class="btn-action view">View</a>
-            <a href="#" class="btn-action update">Update</a>
-            <a href="#" class="btn-action delete">Delete</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6">No appointments found.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+      <section class="appointments-list-section">
+        <div class="section-header">
+          <h3><i class="fa-solid fa-calendar-check"></i> Appointments</h3>
+          <a href="#" class="btn-view-all">Add New</a>
+        </div>
 
-  <!-- Pagination -->
-  <div class="appointments-pagination">
-    <ul class="pagination-list">
-      {% if appointments.has_previous %}
-        <li><a href="?page={{ appointments.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">&laquo; Prev</a></li>
-      {% else %}
-        <li class="disabled">&laquo; Prev</li>
-      {% endif %}
+        <div class="appointments-table-wrapper">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appt in appointments %}
+              <tr>
+                <td>{{ appt.id }}</td>
+                <td>{{ appt.patient.name }}</td>
+                <td>{{ appt.patient.phone }}</td>
+                <td>{{ appt.date }}</td>
+                <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
+                <td>
+                  <a href="#" class="btn-action view">View</a>
+                  <a href="#" class="btn-action update">Update</a>
+                  <a href="#" class="btn-action delete">Delete</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6">No appointments found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
 
-      {% for num in appointments.paginator.page_range %}
-        {% if appointments.number == num %}
-          <li class="active-page">{{ num }}</li>
-        {% else %}
-          <li><a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a></li>
-        {% endif %}
-      {% endfor %}
+        <!-- Pagination -->
+        <div class="appointments-pagination">
+          <ul class="pagination-list">
+            {% if appointments.has_previous %}
+              <li><a href="?page={{ appointments.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">&laquo; Prev</a></li>
+            {% else %}
+              <li class="disabled">&laquo; Prev</li>
+            {% endif %}
 
-      {% if appointments.has_next %}
-        <li><a href="?page={{ appointments.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next &raquo;</a></li>
-      {% else %}
-        <li class="disabled">Next &raquo;</li>
-      {% endif %}
-    </ul>
-  </div>
-</section>
+            {% for num in appointments.paginator.page_range %}
+              {% if appointments.number == num %}
+                <li class="active-page">{{ num }}</li>
+              {% else %}
+                <li><a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a></li>
+              {% endif %}
+            {% endfor %}
 
+            {% if appointments.has_next %}
+              <li><a href="?page={{ appointments.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next &raquo;</a></li>
+            {% else %}
+              <li class="disabled">Next &raquo;</li>
+            {% endif %}
+          </ul>
+        </div>
+      </section>
+{% endblock %}
 
-
-      
-  <script src="{% static 'js/dashboard.js' %}"></script>
-
-  <!-- Footer -->
-  <footer class="dashboard-footer">
-    <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
-  </footer>
-</body>
-</html>

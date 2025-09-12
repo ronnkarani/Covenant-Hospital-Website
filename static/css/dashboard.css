@@ -10,6 +10,52 @@ body {
   color: #333;
 }
 
+/* Profile Page Styles */
+.profile-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  background: #f9f9f9;
+}
+
+.profile-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  max-width: 90%;
+}
+
+.profile-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: maroon;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.profile-details p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.profile-details strong {
+  color: maroon;
+}
+
+/* Doctor-specific */
+.doctor-card {
+  border-left: 5px solid darkred;
+}
+
+/* Patient-specific */
+.patient-card {
+  border-left: 5px solid teal;
+}
+
+
 /* Navbar */
 .dashboard-navbar {
   position: sticky;

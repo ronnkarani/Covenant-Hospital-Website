@@ -3,21 +3,28 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
+import uuid
 
 
 #USER MODEL
-
 class Profile(models.Model):
     ROLE_CHOICES = (
         ('doctor', 'Doctor'),
         ('patient', 'Patient'),
+        ('pending', 'Pending'),   # ✅ Add pending state
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='patient')
+    hospital_id = models.CharField(max_length=20, unique=True, blank=True, null=True)  # ✅ Unique hospital ID
+
+    def save(self, *args, **kwargs):
+        if not self.hospital_id:
+            prefix = "DOC" if self.role == "doctor" else "PAT"
+            self.hospital_id = f"{prefix}-{uuid.uuid4().hex[:6].upper()}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.username} - {self.role}"
-
+        return f"{self.user.username} ({self.hospital_id}) - {self.role}"
 
 
 # HERO SECTION
@@ -112,33 +119,39 @@ class PartnerLogo(models.Model):
         return self.alt_text
 
 
-# PATIENT MODEL
 class Patient(models.Model):
-    GENDER_CHOICES = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-    )
+    patient_id = models.CharField(max_length=20, unique=True, editable=False, blank=True, null=True)  # ✅
     name = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
     age = models.PositiveIntegerField()
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    department = models.CharField(max_length=100)
+    gender = models.CharField(max_length=1, choices=(('M', 'Male'), ('F', 'Female')))
     date_added = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if not self.patient_id:
+            self.patient_id = f"PAT-{uuid.uuid4().hex[:6].upper()}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.patient_id})"
 
 
 # DOCTOR MODEL
 class Doctor(models.Model):
+    doctor_id = models.CharField(max_length=20, unique=True, editable=False, blank=True, null=True)  # ✅
     name = models.CharField(max_length=200)
     specialty = models.CharField(max_length=100)
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     department = models.CharField(max_length=100)
 
+    def save(self, *args, **kwargs):
+        if not self.doctor_id:
+            self.doctor_id = f"DOC-{uuid.uuid4().hex[:6].upper()}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Dr. {self.name} - {self.specialty}"
+        return f"Dr. {self.name} ({self.doctor_id}) - {self.specialty}"
 
 
 # APPOINTMENT MODEL
@@ -155,6 +168,7 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"{self.patient.name} with {self.doctor} on {self.date}"
+
 
 
 # REPORT MODEL
@@ -182,7 +196,7 @@ class Message(models.Model):
         ('read', 'Read'),
     )
     sender = models.CharField(max_length=200)
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
+    recipient_doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True, related_name="doctor_messages")
     subject = models.CharField(max_length=200)
     content = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='unread')

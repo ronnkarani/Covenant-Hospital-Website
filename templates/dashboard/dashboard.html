@@ -1,136 +1,88 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hospital Dashboard</title>
-  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
+{% extends "dashboard/base_dashboard.html" %}
 
-  <!-- Navbar -->
-  <nav class="dashboard-navbar">
-    <div class="nav-left">
-  <i class="fa-solid fa-bars menu-toggle"></i> <!-- Hamburger -->
-  <i class="fa-solid fa-hospital"></i>
-  <span class="nav-title">Covenant Hospital Portal</span>
-</div>
+{% block title %}Dashboard{% endblock %}
+{% block page_class %}{% endblock %}  {# no extra class #}
 
-    <div class="nav-right">
-      <i class="fa-solid fa-user-circle"></i>
-      <span class="username">{{ user.username }}</span>
-      <i class="fa-solid fa-caret-down dropdown-toggle"></i>
-      <ul class="dropdown-menu">
-        <li><a href="#">Profile</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        <li><a href="{% url 'index' %}">Back to Website</a></li>
-      </ul>
-    </div>
-    
-
-  </nav>
-
-  <!-- Main Layout -->
-  <div class="dashboard-container">
-    
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-  <ul>
-    <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <a href="{% url 'dashboard' %}">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'patients' %}active{% endif %}">
-      <a href="{% url 'patients' %}">
-        <i class="fa-solid fa-bed"></i> Patients
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
-      <a href="{% url 'appointments' %}">
-        <i class="fa-solid fa-calendar-check"></i> Appointments
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-      <a href="{% url 'reports' %}">
-        <i class="fa-solid fa-chart-line"></i> Reports
-      </a>
-    </li>
-    <li class="{% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
-      <a href="{% url 'messages' %}">
-        <i class="fa-solid fa-user-md"></i> Messages
-      </a>
-    </li>
-  </ul>
-</aside>
+{% block content %}
 
 
-    <!-- Main Content -->
-    <main class="dashboard-main">
-  <!-- Profile Section -->
-  <section class="user-profile">
-    <h2><i class="fa-solid fa-user-circle"></i> Welcome, 
-      <span class="username">{{ user.username }}</span>
-    </h2>
-    <p class="role">Doctor - Cardiology Department</p>
-    <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
-  </section>
+      
 
-  <!-- Call to Action Buttons -->
-  <div class="cta-buttons">
-    <a href="#" class="btn-cta"><i class="fa-solid fa-calendar-plus"></i> New Appointment</a>
-    <a href="#" class="btn-cta"><i class="fa-solid fa-user-plus"></i> Add Patient</a>
-    <a href="#" class="btn-cta"><i class="fa-solid fa-file-medical"></i> Reports</a>
+
+      <!-- Messages Section -->
+<section class="messages">
+  <div class="messages-card">
+    <h3><i class="fa-solid fa-envelope"></i> Messages</h3>
+    <p>You have <strong>{{ messages|length }}</strong> new messages.</p>
+
+    <a href="{% url 'messages' %}" class="btn-messages">View Messages</a>
   </div>
+</section>
 
-  <!-- Messages Section -->
-  <section class="messages">
-    <div class="messages-card">
-      <h3><i class="fa-solid fa-envelope"></i> Messages</h3>
-      <p>You have <strong>{{ messages|length }}</strong> new messages.</p>
-      <a href="#" class="btn-messages">View Messages</a>
-    </div>
-  </section>
+      
 
-
-
-<section class="patients">
+      <!-- ================== RECENT PATIENTS ================== -->
+      <section class="patients">
   <div class="section-header">
-    <h3><i class="fa-solid fa-users"></i> Recent Patients</h3>
+    {% if session_role == "doctor" %}
+      <h3><i class="fa-solid fa-users"></i> Recent Patients</h3>
+    {% else %}
+      <h3><i class="fa-solid fa-users"></i> Your Patient Record</h3>
+    {% endif %}
     <a href="{% url 'patients' %}" class="btn-view-all">View All</a>
   </div>
+
   <div class="table-wrapper">
     <table class="patients-table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Phone</th>
-          <th>Department</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Actions</th>
+          {% if session_role == "doctor" %}
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Actions</th>
+          {% else %}
+            <th>Department</th>
+            <th>Doctor</th>
+            <th>Date Added</th>
+            <th>Actions</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
         {% for p in patients %}
-        <tr>
-          <td>{{ p.id }}</td>
-          <td class="patient-name">{{ p.name }}</td>
-          <td>{{ p.phone }}</td>
-          <td>{{ p.department }}</td>
-          <td>{{ p.age }}</td>
-          <td>{{ p.gender }}</td>
-          <td>
-            <a href="" class="btn-action view">View</a>
-            <a href="" class="btn-action update">Edit</a>
-            <a href="" class="btn-action delete">Delete</a>
-          </td>
-        </tr>
+          <tr>
+            <td>{{ p.id }}</td>
+            <td class="patient-name">{{ p.name }}</td>
+
+            {% if session_role == "doctor" %}
+              <td>{{ p.phone }}</td>
+              <td>{{ p.department }}</td>
+              <td>{{ p.age }}</td>
+              <td>{{ p.gender }}</td>
+              <td>
+                <a href="" class="btn-action view">View</a>
+                <a href="" class="btn-action update">Edit</a>
+                <a href="" class="btn-action delete">Delete</a>
+              </td>
+            {% else %}
+              <td>{{ p.department }}</td>
+              <td>
+                {% with doctor=p.appointments.first.doctor %}
+                  {% if doctor %}Dr. {{ doctor.name }}{% else %}N/A{% endif %}
+                {% endwith %}
+              </td>
+              <td>{{ p.date_added|date:"Y-m-d" }}</td>
+              <td>
+                <a href="" class="btn-action view">View</a>
+              </td>
+            {% endif %}
+          </tr>
         {% empty %}
-        <tr><td colspan="7">No patients found.</td></tr>
+          <tr><td colspan="7">No patients found.</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -138,98 +90,83 @@
 </section>
 
 
-<!-- ================== RECENT APPOINTMENTS ================== -->
-<section class="appointments">
-  <div class="section-header">
-    <h3><i class="fa-solid fa-calendar-check"></i> Recent Appointments</h3>
-    <a href="{% url 'appointments' %}" class="btn-view-all">View All</a>
-  </div>
-  <div class="table-wrapper">
-    <table class="appointments-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Patient</th>
-          <th>Phone</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for appt in appointments %}
-        <tr>
-          <td>{{ appt.id }}</td>
-          <td>{{ appt.patient.name }}</td>
-          <td>{{ appt.patient.phone }}</td>
-          <td>{{ appt.date }}</td>
-          <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
-          <td>
-            <a href="#" class="btn-action view">View</a>
-            <a href="#" class="btn-action update">Update</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">No appointments found.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
+      <!-- ================== RECENT APPOINTMENTS ================== -->
+      <section class="appointments">
+        <div class="section-header">
+          <h3><i class="fa-solid fa-calendar-check"></i> Recent Appointments</h3>
+          <a href="{% url 'appointments' %}" class="btn-view-all">View All</a>
+        </div>
+        <div class="table-wrapper">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appt in appointments %}
+              <tr>
+                <td>{{ appt.id }}</td>
+                <td>{{ appt.patient.name }}</td>
+                <td>{{ appt.patient.phone }}</td>
+                <td>{{ appt.date }}</td>
+                <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
+                <td>
+                  <a href="#" class="btn-action view">View</a>
+                  <a href="#" class="btn-action update">Update</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5">No appointments found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
 
-<!-- ================== RECENT REPORTS ================== -->
-<section class="reports">
-  <div class="section-header">
-    <h3><i class="fa-solid fa-file-medical"></i> Recent Reports</h3>
-    <a href="{% url 'reports' %}" class="btn-view-all">View All</a>
-  </div>
-  <div class="table-wrapper">
-    <table class="reports-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for rep in reports %}
-        <tr>
-          <td>{{ rep.id }}</td>
-          <td>{{ rep.title }}</td>
-          <td>{{ rep.date }}</td>
-          <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
-          <td>
-            <a href="#" class="btn-action view">View</a>
-            <a href="#" class="btn-action update">Update</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">No reports found.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
+      {% if session_role == "doctor" %}
+  <!-- ================== RECENT REPORTS ================== -->
+  <section class="reports">
+    <div class="section-header">
+      <h3><i class="fa-solid fa-file-medical"></i> Recent Reports</h3>
+      <a href="{% url 'reports' %}" class="btn-view-all">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table class="reports-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rep in reports %}
+          <tr>
+            <td>{{ rep.id }}</td>
+            <td>{{ rep.title }}</td>
+            <td>{{ rep.date }}</td>
+            <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
+            <td>
+              <a href="#" class="btn-action view">View</a>
+              <a href="#" class="btn-action update">Update</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5">No reports found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endif %}
 
-
-  
-
-
-</main>
-
-
-  </div>
-  <script src="{% static 'js/dashboard.js' %}"></script>
-
-
-  <!-- Footer -->
-  <footer class="dashboard-footer">
-    <p>&copy; 2025 Covenant Hospital | All Rights Reserved</p>
-  </footer>
-
-</body>
-</html>
+{% endblock %}

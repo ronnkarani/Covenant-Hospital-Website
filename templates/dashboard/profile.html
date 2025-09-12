@@ -1,0 +1,38 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+  {% if session_role == "doctor" %}
+    <div class="profile-card doctor-card">
+      <h2><i class="fa-solid fa-user-doctor"></i> Doctor Profile</h2>
+      <div class="profile-details">
+        <p><strong>ID:</strong> {{ doctor.id }}</p>
+        <p><strong>Name:</strong> Dr. {{ doctor.name }}</p>
+        <p><strong>Email:</strong> {{ doctor.email }}</p>
+        <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+        <p><strong>Department:</strong> {{ doctor.department }}</p>
+        <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+        <p><strong>Date Joined:</strong> {{ doctor.date_joined }}</p>
+      </div>
+    </div>
+  
+  {% elif session_role == "patient" %}
+    <div class="profile-card patient-card">
+      <h2><i class="fa-solid fa-user"></i> Patient Profile</h2>
+      <div class="profile-details">
+        <p><strong>ID:</strong> {{ patient.id }}</p>
+        <p><strong>Name:</strong> {{ patient.name }}</p>
+        <p><strong>Email:</strong> {{ patient.email }}</p>
+        <p><strong>Phone:</strong> {{ patient.phone }}</p>
+        <p><strong>Age:</strong> {{ patient.age }}</p>
+        <p><strong>Gender:</strong> {{ patient.gender }}</p>
+        <p><strong>Date Added:</strong> {{ patient.date_added }}</p>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
