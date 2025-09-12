@@ -55,6 +55,219 @@ body {
   border-left: 5px solid teal;
 }
 
+/* ================= Add Patient Page Styles ================= */
+.add-patient-page {
+  background-color: #f4f4f9;
+  padding: 40px 20px;
+  min-height: 80vh;
+}
+
+.add-patient-page .container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.page-header h2 {
+  color: maroon;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.page-header p {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: maroon;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-submit {
+  background-color: maroon;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: #800000;
+}
+
+.btn-cancel {
+  padding: 12px 20px;
+  background-color: #ccc;
+  color: #333;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #aaa;
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 600px) {
+  .add-patient-page {
+    padding: 30px 15px;
+  }
+
+  .page-header h2 {
+    font-size: 24px;
+  }
+}
+
+
+/* Add Appointment Page */
+.add-appointment-page {
+    padding: 2rem;
+    background-color: #f8f8f8;
+}
+
+.add-appointment-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.add-appointment-section .section-header h3 {
+    font-size: 1.6rem;
+    color: maroon;
+}
+
+.add-appointment-section .btn-view-all {
+    background-color: maroon;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.add-appointment-section .btn-view-all:hover {
+    background-color: #800000;
+}
+
+/* Form */
+.add-appointment-form {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.add-appointment-form .form-group,
+.add-appointment-form .form-group-inline {
+    margin-bottom: 1rem;
+}
+
+.add-appointment-form .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.add-appointment-form .form-group input,
+.add-appointment-form .form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.add-appointment-form .form-group-inline {
+    display: flex;
+    gap: 1rem;
+}
+
+.add-appointment-form .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    margin-top: 1.5rem;
+}
+
+.add-appointment-form .btn-submit {
+    background-color: maroon;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-appointment-form .btn-submit:hover {
+    background-color: #800000;
+}
+
+.add-appointment-form .btn-cancel {
+    background-color: #ccc;
+    color: #333;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.add-appointment-form small {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+
 
 /* Navbar */
 .dashboard-navbar {

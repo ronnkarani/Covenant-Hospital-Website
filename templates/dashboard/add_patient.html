@@ -1,0 +1,52 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Add Patient{% endblock %}
+
+{% block content %}
+<section class="add-patient-page">
+  <div class="container">
+    <div class="page-header">
+      <h2><i class="fa-solid fa-user-plus"></i> Add New Patient</h2>
+      <p>Fill in the patient details below to add them to the system.</p>
+    </div>
+
+    <div class="form-card">
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="id_name">Full Name</label>
+          <input type="text" name="name" id="id_name" placeholder="Patient Full Name" required>
+        </div>
+
+
+        <div class="form-group">
+          <label for="id_phone">Phone Number</label>
+          <input type="text" name="phone" id="id_phone" placeholder="Phone Number" required>
+        </div>
+
+        <div class="form-group">
+          <label for="id_age">Age</label>
+          <input type="number" name="age" id="id_age" placeholder="Age" required>
+        </div>
+
+        <div class="form-group">
+          <label for="id_gender">Gender</label>
+          <select name="gender" id="id_gender" required>
+            <option value="">Select Gender</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit"><i class="fa-solid fa-check"></i> Add Patient</button>
+          <a href="{% url 'patients' %}" class="btn-cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

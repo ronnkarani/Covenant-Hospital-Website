@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from core.models import HeroSlide, HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment, Profile, Patient, Doctor, Appointment, Report, Message
-from core.forms import CommentForm
+from core.forms import CommentForm, PatientForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.conf import settings
 from django.db.models import Q
 from .decorators import session_required
+from django.utils import timezone
+
 
 #LOGIN VIEW
 def signup_view(request):
@@ -436,3 +438,104 @@ def profile(request):
         context["patient"] = patient
 
     return render(request, "dashboard/profile.html", context)
+
+
+@session_required
+def add_patient(request):
+    role = request.session.get("user_role")
+
+    if role != "doctor":
+        messages.error(request, "Only doctors can add patients.")
+        return redirect("dashboard")
+
+    doctor_id = request.session.get("doctor_id")
+    doctor = Doctor.objects.filter(id=doctor_id).first()
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        age = request.POST.get("age")
+        gender = request.POST.get("gender")
+
+        if not all([name, phone, age, gender]):
+            messages.error(request, "Please fill in all required fields.")
+            return render(request, "dashboard/add_patient.html")
+
+        # Create patient
+        patient = Patient.objects.create(
+            name=name,
+            phone=phone,
+            age=age,
+            gender=gender
+        )
+
+        # Link patient to doctor via first appointment
+        Appointment.objects.create(
+            patient=patient,
+            doctor=doctor,
+            date=timezone.now(),
+            status="pending"
+        )
+
+        messages.success(request, f"Patient {patient.name} added successfully!")
+
+        # Fetch updated patients list for this doctor
+        patients_list = Patient.objects.filter(
+            appointments__doctor=doctor
+        ).distinct().order_by("-date_added")
+
+        # Pagination
+        paginator = Paginator(patients_list, 10)
+        page_number = request.GET.get("page") or 1
+        patients_page = paginator.get_page(page_number)
+
+        # Render patients page with new patient highlighted
+        return render(request, "dashboard/patients.html", {
+            "patients_page": patients_page,
+            "role": role,
+            "new_patient": patient,  # template can highlight this
+            "query": "",
+        })
+
+    return render(request, "dashboard/add_patient.html")
+
+
+@session_required
+def add_appointment(request):
+    role = request.session.get("user_role")
+    if role != "doctor":
+        messages.error(request, "Only doctors can add appointments.")
+        return redirect("dashboard")
+
+    doctor_id = request.session.get("doctor_id")
+    doctor = Doctor.objects.filter(id=doctor_id).first()
+
+    if request.method == "POST":
+        name = request.POST.get("patient_name")
+        phone = request.POST.get("phone")
+        age = request.POST.get("age")
+        gender = request.POST.get("gender")
+        date = request.POST.get("date")
+
+        # Check if patient exists
+        patient = Patient.objects.filter(name__iexact=name, phone=phone).first()
+        if not patient:
+            patient = Patient.objects.create(
+                name=name,
+                phone=phone,
+                age=age,
+                gender=gender
+            )
+
+        Appointment.objects.create(
+            patient=patient,
+            doctor=doctor,
+            date=date,
+            status="pending"
+        )
+
+        messages.success(request, f"Appointment for {patient.name} added successfully!")
+        return redirect("appointments")
+
+    return render(request, "dashboard/add_appointment.html")

@@ -28,7 +28,7 @@
     <div class="section-header">
   {% if role == "doctor" %}
     <h3><i class="fa-solid fa-users"></i> Patients</h3>
-    <a href="#" class="btn-view-all">Add New</a>
+    <a href="{% url 'add_patient' %}" class="btn-view-all">Add New</a>
   {% elif role == "patient" %}
     <h3><i class="fa-solid fa-user"></i> Your Patient Record</h3>
   {% endif %}
@@ -74,6 +74,7 @@
       </tr>
     {% elif role == "patient" %}
       <tr>
+                    <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
         <td>{{ p.id }}</td>
         <td class="patient-name">{{ p.name }}</td>
         <td>{{ p.department }}</td>
