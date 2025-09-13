@@ -1341,6 +1341,43 @@ body {
   border-color: #f1f1f1;
 }
 
+/* ---------- ACTION BUTTONS ---------- */
+.messages-list-table td.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s ease-in-out;
+}
+
+.action-btn.view {
+  background: #4a90e2;
+}
+.action-btn.view:hover {
+  background: #357abd;
+}
+
+.action-btn.update {
+  background: #f0ad4e;
+}
+.action-btn.update:hover {
+  background: #d9902f;
+}
+
+.action-btn.delete {
+  background: #d9534f;
+}
+.action-btn.delete:hover {
+  background: #b52b27;
+}
+
+
 /* --- Responsive tweaks --- */
 @media (max-width: 900px) {
   .messages-page .messages-cards {
@@ -1371,6 +1408,179 @@ body {
   }
 }
 
+/* ---------- MESSAGES LIST (scoped) ---------- */
+.messages-list-page h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: maroon;
+}
+
+.messages-list-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.messages-list-search-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.messages-list-search-field {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.messages-list-search-btn {
+  padding: 0.6rem 1rem;
+  background: maroon;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.messages-list-search-btn:hover {
+  background: maroon;
+}
+
+.messages-list-wrapper {
+  overflow-x: auto;
+}
+
+.messages-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.messages-list-table th,
+.messages-list-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  
+}
+
+.messages-list-table tr.row-unread {
+  background: #f9f9ff;
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+.status-badge.unread {
+  background: #ffefef;
+  color: #d63333;
+}
+.status-badge.read {
+  background: #e6f7ed;
+  color: #1c7c54;
+}
+
+.messages-list-pagination {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.messages-list-pagination .pagination {
+  display: inline-flex;
+  list-style: none;
+  gap: 0.4rem;
+  padding: 0;
+}
+
+.messages-list-pagination li {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.messages-list-pagination li.active {
+  background: maroon;
+  color: #fff;
+}
+
+.messages-list-pagination li.disabled {
+  color: #aaa;
+  border-color: #eee;
+}
+
+/* ---------- MESSAGE DETAIL PAGE ---------- */
+.message-detail-section {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.message-detail-card {
+  max-width: 700px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 1.5rem 2rem;
+}
+
+.message-detail-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: maroon; /* heading maroon */
+}
+
+.message-detail-header .meta {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+}
+
+.message-detail-body {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #333;
+}
+
+.message-detail-footer {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.detail-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s ease-in-out;
+}
+
+.detail-btn.back {
+  background: #6c757d; /* gray */
+}
+.detail-btn.back:hover {
+  background: #545b62;
+}
+
+.detail-btn.update {
+  background: #b45f06; /* brown-maroon shade */
+}
+.detail-btn.update:hover {
+  background: #8c4a05;
+}
+
+.detail-btn.delete {
+  background: #a4161a; /* deep maroon-red */
+}
+.detail-btn.delete:hover {
+  background: #7d1013;
+}
 
 
 /* Responsive */

@@ -52,7 +52,6 @@
     {% elif role == "patient" %}
       <th>ID</th>
       <th>Name</th>
-      <th>Department</th>
       <th>Doctor</th>
       <th>Date</th>
     {% endif %}
@@ -79,7 +78,6 @@
                     <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
         <td>{{ p.id }}</td>
         <td class="patient-name">{{ p.name }}</td>
-        <td>{{ p.department }}</td>
         <td>
           {% with appt=p.appointments.first %}
             {% if appt and appt.doctor %}Dr. {{ appt.doctor.name }}{% else %}N/A{% endif %}

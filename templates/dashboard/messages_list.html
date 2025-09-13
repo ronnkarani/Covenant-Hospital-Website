@@ -1,1 +1,103 @@
 
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Messages{% endblock %}
+{% block page_class %}messages-list-page{% endblock %}
+
+{% block content %}
+<section class="messages-list-header">
+  <h2><i class="fa-solid fa-envelope"></i>
+    {% if view_type == "unread" %}
+      Unread Messages
+    {% else %}
+      All Messages
+    {% endif %}
+  </h2>
+  <p class="messages-list-meta">
+    Showing <strong>{{ page_obj.paginator.count }}</strong> messages  
+    {% if view_type == "unread" %}(unread only){% endif %}
+  </p>
+</section>
+
+<!-- Search -->
+<section class="messages-list-search">
+  <form method="get" action="" class="messages-list-search-form">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search by sender, subject, or content..."
+      value="{{ request.GET.q|default:'' }}"
+      class="messages-list-search-field"
+    />
+    <button type="submit" class="messages-list-search-btn">Search</button>
+  </form>
+</section>
+
+<!-- Table -->
+<section class="messages-list-section">
+  <div class="messages-list-wrapper">
+    <table class="messages-list-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Sender</th>
+          <th>Subject</th>
+          <th>Content</th>
+          <th>Status</th>
+          <th>Actions</th> <!-- new column -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in page_obj %}
+          <tr class="{% if msg.status == 'unread' %}row-unread{% endif %}">
+            <td>{{ msg.id }}</td>
+            <td>{{ msg.sender }}</td>
+            <td class="subject">{{ msg.subject }}</td>
+            <td class="preview">{{ msg.content|truncatewords:15 }}</td>
+            <td>
+              {% if msg.status == "unread" %}
+                <span class="status-badge unread">Unread</span>
+              {% else %}
+                <span class="status-badge read">Read</span>
+              {% endif %}
+            </td>
+            <td class="actions">
+              <a href="{% url 'message_detail' msg.id %}" class="action-btn view">View</a>
+              <a href="" class="action-btn update">Update</a>
+              <a href="" class="action-btn delete">Delete</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No messages found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- Pagination -->
+<div class="messages-list-pagination">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Prev</a></li>
+    {% else %}
+      <li class="disabled">&laquo; Prev</li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if num == page_obj.number %}
+        <li class="active">{{ num }}</li>
+      {% else %}
+        <li><a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next &raquo;</a></li>
+    {% else %}
+      <li class="disabled">Next &raquo;</li>
+    {% endif %}
+  </ul>
+</div>
+{% endblock %}

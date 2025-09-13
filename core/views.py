@@ -288,7 +288,6 @@ def patients(request):
         patients_list = patients_list.filter(
             Q(name__icontains=q)
             | Q(phone__icontains=q)
-            | Q(department__icontains=q)
         )
 
     paginator = Paginator(patients_list, 10)
@@ -521,6 +520,12 @@ def messages_unread(request):
         "session_role": role,
     })
 
+@session_required
+def message_detail(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+    return render(request, "dashboard/message_detail.html", {
+        "message": message
+    })
 
 
 #------ PROFILE VIEW ------

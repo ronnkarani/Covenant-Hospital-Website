@@ -23,6 +23,7 @@ urlpatterns = [
     path("patients/<int:pk>/", views.patient_detail, name="patient_detail"),
     path("appointments/<int:appointment_id>/", views.appointment_detail, name="appointment_detail"),
     path("reports/<int:report_id>/", views.report_detail, name="report_detail"),
-    path("messages/", views.messages_all, name="messages"),
+    path("messages/all", views.messages_all, name="messages_all"),
     path("messages/unread/", views.messages_unread, name="messages_unread"),
+    path("messages/<int:pk>/", views.message_detail, name="message_detail"),
 ]

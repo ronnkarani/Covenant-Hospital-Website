@@ -1,0 +1,27 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Message Detail{% endblock %}
+{% block page_class %}message-detail-page{% endblock %}
+
+{% block content %}
+<section class="message-detail-section">
+  <div class="message-detail-card">
+    <header class="message-detail-header">
+      <h2>{{ message.subject }}</h2>
+      <p class="meta">
+        From: <strong>{{ message.sender }}</strong> | 
+        Sent: {{ message.date_sent|date:"M d, Y H:i" }}
+      </p>
+    </header>
+
+    <div class="message-detail-body">
+      <p>{{ message.content|linebreaks }}</p>
+    </div>
+
+    <footer class="message-detail-footer">
+      <a href="{% url 'messages_all' %}" class="detail-btn back">← Back to All</a>
+      <a href="" class="detail-btn delete">Delete</a>
+    </footer>
+  </div>
+</section>
+{% endblock %}
