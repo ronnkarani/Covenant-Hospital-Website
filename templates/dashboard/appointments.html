@@ -7,6 +7,7 @@
 
       <!-- Search -->
       <!-- Appointments Search (same structure as patients) -->
+      {% if session_role == "doctor" %}
       <section class="appointments-search">
         <form method="get" class="appointments-search-form" action="{% url 'appointments' %}">
           <div class="appointments-search-inputs">
@@ -22,11 +23,12 @@
           </div>
         </form>
       </section>
+      {% endif %}
 
       <section class="appointments-list-section">
         <div class="section-header">
           <h3><i class="fa-solid fa-calendar-check"></i> Appointments</h3>
-          <a href="#" class="btn-view-all">Add New</a>
+          <a href="{% url 'add_appointment' %}" class="btn-view-all">Add New</a>
         </div>
 
         <div class="appointments-table-wrapper">
@@ -50,7 +52,7 @@
                 <td>{{ appt.date }}</td>
                 <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
                 <td>
-                  <a href="#" class="btn-action view">View</a>
+                  <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
                   <a href="#" class="btn-action update">Update</a>
                   <a href="#" class="btn-action delete">Delete</a>
                 </td>

@@ -62,7 +62,7 @@
     {% elif request.session.user_role == "patient" %}
       <!-- Patient sees only Dashboard, Appointments, Messages -->
       <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
-        <a href="{% url 'appointments' %}"><i class="fa-solid fa-clipboard-list"></i> Your Records</a>
+        <a href="{% url 'patients' %}"><i class="fa-solid fa-clipboard-list"></i> Your Records</a>
       </li>
       <li class="{% if request.resolver_match.url_name == 'appointments' %}active{% endif %}">
         <a href="{% url 'appointments' %}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>

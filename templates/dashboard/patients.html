@@ -7,6 +7,7 @@
   
 
   <!-- Search Bar -->
+  {% if session_role == "doctor" %}
   <section class="patients-search">
     <form method="get" class="patients-search-form" action="{% url 'patients' %}">
       <div class="patients-search-inputs">
@@ -22,6 +23,7 @@
       </div>
     </form>
   </section>
+  {% endif %}
 
   <!-- Patients Table -->
   <section class="patients-list-section">
@@ -67,7 +69,7 @@
         <td>{{ p.age }}</td>
         <td>{{ p.gender }}</td>
         <td>
-          <a href="" class="btn-action view">View</a>
+          <a href="{% url 'patient_detail' p.id %}" class="btn-action view">View</a>
           <a href="" class="btn-action update">Edit</a>
           <a href="" class="btn-action delete">Delete</a>
         </td>

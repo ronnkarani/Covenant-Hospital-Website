@@ -1,0 +1,60 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Patient Details{% endblock %}
+{% block page_class %}patient-detail-page{% endblock %}
+
+{% block content %}
+<section class="patient-detail-section">
+  <div class="section-header">
+    {% if role == "doctor" %}
+      <h3><i class="fa-solid fa-user"></i> Patient Details</h3>
+      <a href="{% url 'patients' %}" class="btn-view-all">Back to Patients</a>
+    {% elif role == "patient" %}
+      <h3><i class="fa-solid fa-user"></i> Your Record</h3>
+    {% endif %}
+  </div>
+
+  <div class="patient-card">
+    <div class="patient-info">
+      <p><strong>ID:</strong> {{ patient.id }}</p>
+      <p><strong>Name:</strong> {{ patient.name }}</p>
+      <p><strong>Phone:</strong> {{ patient.phone }}</p>
+      <p><strong>Department:</strong> {{ patient.department }}</p>
+      <p><strong>Age:</strong> {{ patient.age }}</p>
+      <p><strong>Gender:</strong> {{ patient.gender }}</p>
+    </div>
+
+    {% if role == "doctor" %}
+    <div class="patient-actions">
+      <a href="{% url 'view_patient' patient.id %}" class="btn-action update">Edit</a>
+      <a href="" class="btn-action delete">Delete</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Appointment History -->
+  <div class="appointments-history">
+    <h4><i class="fa-solid fa-calendar-check"></i> Appointment History</h4>
+    <table class="appointments-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Doctor</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appt in patient.appointments.all %}
+          <tr>
+            <td>{{ appt.date|date:"Y-m-d H:i" }}</td>
+            <td>Dr. {{ appt.doctor.name }}</td>
+            <td>{{ appt.notes|default:"-" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">No appointments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

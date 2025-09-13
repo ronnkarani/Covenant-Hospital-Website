@@ -9,15 +9,17 @@
       
 
 
-      <!-- Messages Section -->
-<section class="messages">
-  <div class="messages-card">
-    <h3><i class="fa-solid fa-envelope"></i> Messages</h3>
-    <p>You have <strong>{{ messages|length }}</strong> new messages.</p>
+{% if session_role == "doctor" %}
+  <!-- Messages Section -->
+  <section class="messages">
+    <div class="messages-card">
+      <h3><i class="fa-solid fa-envelope"></i> Messages</h3>
+      <p>You have <strong>{{ messages|length }}</strong> new messages.</p>
 
-    <a href="{% url 'messages' %}" class="btn-messages">View Messages</a>
-  </div>
-</section>
+      <a href="{% url 'messages' %}" class="btn-messages">View Messages</a>
+    </div>
+  </section>
+{% endif %}
 
       
 
@@ -64,7 +66,7 @@
               <td>{{ p.age }}</td>
               <td>{{ p.gender }}</td>
               <td>
-                <a href="" class="btn-action view">View</a>
+                <a href="{% url 'patient_detail' p.id %}" class="btn-action view">View</a>
                 <a href="" class="btn-action update">Edit</a>
                 <a href="" class="btn-action delete">Delete</a>
               </td>
@@ -117,7 +119,7 @@
                 <td>{{ appt.date }}</td>
                 <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
                 <td>
-                  <a href="#" class="btn-action view">View</a>
+                  <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
                   <a href="#" class="btn-action update">Update</a>
                 </td>
               </tr>
@@ -156,7 +158,7 @@
             <td>{{ rep.date }}</td>
             <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
             <td>
-              <a href="#" class="btn-action view">View</a>
+              <a href="{% url 'report_detail' rep.id %}" class="btn-action view">View</a>
               <a href="#" class="btn-action update">Update</a>
             </td>
           </tr>

@@ -20,10 +20,21 @@
       <p>{{ hero_content.subtitle }}</p>
       <div class="hero-buttons">
             {% if hero_content.button_text %}
-            <a href="{% url 'contact'%}" class="btn">
-                {{ hero_content.button_text }}
-            </a>
-            {% endif %}
+    {% if session_role == "patient" %}
+        <a href="{% url 'book_appointment' %}" class="btn">
+            {{ hero_content.button_text }}
+        </a>
+    {% elif session_role == "doctor" %}
+        <a href="{% url 'add_appointment' %}" class="btn">
+            {{ hero_content.button_text }}
+        </a>
+    {% else %}
+        <a href="{% url 'book_appointment' %}" class="btn">
+            {{ hero_content.button_text }}
+        </a>
+    {% endif %}
+{% endif %}
+
         </div>
     </div>
   {% endif %}

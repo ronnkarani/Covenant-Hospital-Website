@@ -33,8 +33,9 @@
                 </a>
                 <ul class="dropdown-menu">
                     {% if session_role %}
-                        <li><a href="{% url 'logout' %}">Logout</a></li>
                         <li><a href="{% url 'dashboard' %}">Portal</a></li>
+                        <li><a href="{% url 'profile' %}">Profile</a></li>
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
                     {% else %}
                         <li><a href="{% url 'login' %}">Login</a></li>
                         <li><a href="{% url 'signup' %}">Signup</a></li>

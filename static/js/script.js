@@ -98,3 +98,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 4000);
 });
 
+
+// Filter doctors by selected department
+  const departmentSelect = document.getElementById('department-select');
+  const doctorSelect = document.getElementById('doctor-select');
+
+  departmentSelect.addEventListener('change', function() {
+    const dept = this.value;
+    Array.from(doctorSelect.options).forEach(option => {
+      option.style.display = option.dataset.department === dept || option.value === "" ? "block" : "none";
+    });
+    doctorSelect.value = "";
+  });
+

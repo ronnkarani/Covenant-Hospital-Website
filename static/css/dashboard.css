@@ -164,108 +164,6 @@ body {
 }
 
 
-/* Add Appointment Page */
-.add-appointment-page {
-    padding: 2rem;
-    background-color: #f8f8f8;
-}
-
-.add-appointment-section .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.add-appointment-section .section-header h3 {
-    font-size: 1.6rem;
-    color: maroon;
-}
-
-.add-appointment-section .btn-view-all {
-    background-color: maroon;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    transition: 0.3s;
-}
-
-.add-appointment-section .btn-view-all:hover {
-    background-color: #800000;
-}
-
-/* Form */
-.add-appointment-form {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.add-appointment-form .form-group,
-.add-appointment-form .form-group-inline {
-    margin-bottom: 1rem;
-}
-
-.add-appointment-form .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.add-appointment-form .form-group input,
-.add-appointment-form .form-group select {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-}
-
-.add-appointment-form .form-group-inline {
-    display: flex;
-    gap: 1rem;
-}
-
-.add-appointment-form .form-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-start;
-    margin-top: 1.5rem;
-}
-
-.add-appointment-form .btn-submit {
-    background-color: maroon;
-    color: #fff;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.add-appointment-form .btn-submit:hover {
-    background-color: #800000;
-}
-
-.add-appointment-form .btn-cancel {
-    background-color: #ccc;
-    color: #333;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-.add-appointment-form small {
-    font-size: 0.8rem;
-    color: #555;
-}
 
 
 
@@ -929,6 +827,308 @@ body {
 }
 
 
+/* ==========================
+   Patient Detail Page Styles
+   ========================== */
+.patient-detail-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.patient-detail-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.patient-card {
+  background: #fdfdfd;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 30px;
+}
+
+.patient-card .patient-info p {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.patient-card .patient-actions {
+  margin-top: 15px;
+}
+
+.patient-card .btn-action {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-right: 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.patient-card .btn-action.update {
+  background: #f0ad4e;
+  color: #fff;
+}
+
+.patient-card .btn-action.delete {
+  background: #d9534f;
+  color: #fff;
+}
+
+.patient-card .btn-action:hover {
+  opacity: 0.85;
+}
+
+.appointments-history {
+  margin-top: 20px;
+}
+
+.appointments-history h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: maroon;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.appointments-table th,
+.appointments-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.appointments-table th {
+  background: maroon;
+  color: #fff;
+}
+
+.appointments-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+
+/* ============================
+   Patient Appointments Detail
+   ============================ */
+/* Appointment Detail Page */
+.appointment-detail-page {
+  display: flex;
+  min-height: calc(100vh - 60px);
+  background: #f9fafc;
+}
+
+/* Main Section */
+.appointment-detail-section {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  width: 100%;
+}
+
+/* Header */
+.appointment-detail-section .detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.appointment-detail-section .detail-header h3 {
+  font-size: 1.4rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Info Card */
+.appointment-info-card {
+  background: #fdfdfd;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.appointment-info-card p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.appointment-info-card strong {
+  color: #222;
+}
+
+/* Status Styling */
+.appointment-info-card .status {
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.appointment-info-card .status.confirmed {
+  background: #e0f7ec;
+  color: #059669;
+}
+
+.appointment-info-card .status.pending {
+  background: #fff8e1;
+  color: #d97706;
+}
+
+.appointment-info-card .status.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Action Buttons */
+.btn-detail {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-left: 0.5rem;
+}
+
+.btn-detail.update {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-detail.delete {
+  background: #dc2626;
+  color: #fff;
+}
+
+
+/* Report Detail Page */
+.report-detail-page {
+  display: flex;
+  min-height: calc(100vh - 60px);
+  background: #f9fafc;
+}
+
+/* Main Section */
+.report-detail-section {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  width: 100%;
+}
+
+/* Header */
+.report-detail-section .detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.report-detail-section .detail-header h3 {
+  font-size: 1.4rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Info Card */
+.report-info-card {
+  background: #fdfdfd;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.report-info-card p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.report-info-card strong {
+  color: #222;
+}
+
+/* Status Styling */
+.report-info-card .status {
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.report-info-card .status.approved {
+  background: #e0f7ec;
+  color: #059669;
+}
+
+.report-info-card .status.pending {
+  background: #fff8e1;
+  color: #d97706;
+}
+
+.report-info-card .status.rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Report Content */
+.report-content {
+  margin-top: 1.5rem;
+}
+
+.report-content h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.report-content p {
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* Action Buttons */
+.btn-detail {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-left: 0.5rem;
+}
+
+.btn-detail.update {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-detail.delete {
+  background: #dc2626;
+  color: #fff;
+}
+
+
 /* ===========================
    Messages page (namespaced)
    =========================== */
@@ -1170,6 +1370,7 @@ body {
     align-items: stretch;
   }
 }
+
 
 
 /* Responsive */

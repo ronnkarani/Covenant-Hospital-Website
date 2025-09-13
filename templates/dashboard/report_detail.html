@@ -1,0 +1,40 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Report Detail{% endblock %}
+{% block page_class %}report-detail-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-container report-detail-page">
+
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <section class="report-detail-section">
+      <div class="detail-header">
+        <h3><i class="fa-solid fa-file-alt"></i> Report Details</h3>
+        {% if role == "doctor" %}
+        <div class="detail-actions">
+          <a href="#" class="btn-detail update">Update</a>
+          <a href="#" class="btn-detail delete">Delete</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="report-info-card">
+        <p><strong>ID:</strong> {{ report.id }}</p>
+        <p><strong>Title:</strong> {{ report.title }}</p>
+        <p><strong>Author:</strong> {{ report.author }}</p>
+        <p><strong>Date:</strong> {{ report.date|date:"Y-m-d" }}</p>
+        <p><strong>Status:</strong> 
+          <span class="status {{ report.status|lower }}">{{ report.status }}</span>
+        </p>
+        <div class="report-content">
+          <h4>Description</h4>
+          <p>{{ report.description|linebreaks }}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</div>
+{% endblock %}

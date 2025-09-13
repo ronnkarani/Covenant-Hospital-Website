@@ -1,0 +1,38 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Appointment Detail{% endblock %}
+{% block page_class %}appointment-detail-page{% endblock %}
+
+{% block content %}
+<div class="dashboard-container appointment-detail-page">
+  
+
+  <!-- Main content -->
+  <main class="dashboard-main">
+    <section class="appointment-detail-section">
+      <div class="detail-header">
+        <h3><i class="fa-solid fa-calendar-check"></i> Appointment Details</h3>
+        {% if role == "doctor" %}
+        <div class="detail-actions">
+          <a href="#" class="btn-detail update">Update</a>
+          <a href="#" class="btn-detail delete">Delete</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="appointment-info-card">
+        <p><strong>ID:</strong> {{ appointment.id }}</p>
+        <p><strong>Patient:</strong> {{ appointment.patient.name }}</p>
+        <p><strong>Phone:</strong> {{ appointment.patient.phone }}</p>
+        <p><strong>Date:</strong> {{ appointment.date|date:"Y-m-d H:i" }}</p>
+        <p><strong>Doctor:</strong> {% if appointment.doctor %}Dr. {{ appointment.doctor.name }}{% else %}N/A{% endif %}</p>
+        <p><strong>Status:</strong> 
+          <span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span>
+        </p>
+        <p><strong>Notes:</strong> {{ appointment.notes|default:"—" }}</p>
+      </div>
+    </section>
+  </main>
+
+</div>
+{% endblock %}

@@ -238,7 +238,7 @@ def dashboard(request):
         # tailor "patients" to be just the current patient with doctor + date info
         patients = Patient.objects.filter(id=patient.id).select_related().order_by("-date_added")
         reports = patient.reports.all().order_by("-date")[:5]
-        messages_qs = Message.objects.filter(recipient_patient=patient).order_by("-date_sent")[:5]
+        messages_qs = []  # 👈 no messages for patients
 
     else:  # admin/staff
         appointments = Appointment.objects.all().order_by("-date")[:5]
@@ -305,6 +305,13 @@ def patients(request):
         },
     )
 
+def patient_detail(request, pk):
+    patient = get_object_or_404(Patient, pk=pk)
+    role = request.session.get("role", None)  # doctor or patient
+    return render(request, "dashboard/patient_detail.html", {
+        "patient": patient,
+        "role": role
+    })
 
 # ------------------ APPOINTMENTS ------------------
 @session_required
@@ -339,6 +346,16 @@ def appointments(request):
     return render(request, "dashboard/appointments.html", {
         "appointments": appointments_page,
         "query": q
+    })
+
+
+def appointment_detail(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    role = request.session.get("role", None)  # if you’re using role in session
+
+    return render(request, "dashboard/appointment_detail.html", {
+        "appointment": appointment,
+        "role": role,
     })
 
 
@@ -378,6 +395,10 @@ def reports(request):
         "query": q
     })
 
+def report_detail(request, report_id):
+    report = get_object_or_404(Report, id=report_id)
+    role = request.session.get("role")
+    return render(request, "dashboard/report_detail.html", {"report": report, "role": role})
 
 
 # ------------------ MESSAGES ------------------
@@ -394,7 +415,7 @@ def messages_view(request):
     elif role == "patient":
         patient_id = request.session.get("patient_id")
         patient = Patient.objects.filter(id=patient_id).first()
-        messages_list = Message.objects.filter(recipient_patient=patient).order_by("-date_sent")
+        
 
     else:  # admin/staff
         messages_list = Message.objects.all().order_by("-date_sent")
@@ -419,6 +440,87 @@ def messages_view(request):
         "total_messages": total_messages,
         "query": q
     })
+    
+
+@session_required
+def messages_all(request):
+    role = request.session.get("user_role")
+    q = request.GET.get("q", "").strip()
+
+    if role == "doctor":
+        doctor_id = request.session.get("doctor_id")
+        doctor = Doctor.objects.filter(id=doctor_id).first()
+        messages_list = Message.objects.filter(recipient_doctor=doctor).order_by("-date_sent")
+    elif role == "patient":
+        patient_id = request.session.get("patient_id")
+        patient = Patient.objects.filter(id=patient_id).first()
+        messages_list = Message.objects.filter(recipient_patient=patient).order_by("-date_sent")
+    else:
+        messages_list = Message.objects.all().order_by("-date_sent")
+
+    if q:
+        messages_list = messages_list.filter(
+            Q(sender__icontains=q) |
+            Q(subject__icontains=q) |
+            Q(content__icontains=q)
+        )
+
+    paginator = Paginator(messages_list, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    unread_count = Message.objects.filter(status="unread").count() if role != "doctor" else messages_list.filter(status="unread").count()
+    total_messages = messages_list.count()
+
+    return render(request, "dashboard/messages_list.html", {
+        "page_obj": page_obj,
+        "unread_count": unread_count,
+        "total_messages": total_messages,
+        "query": q,
+        "view_type": "all",
+        "session_role": role,
+    })
+
+
+@session_required
+def messages_unread(request):
+    role = request.session.get("user_role")
+    q = request.GET.get("q", "").strip()
+
+    if role == "doctor":
+        doctor_id = request.session.get("doctor_id")
+        doctor = Doctor.objects.filter(id=doctor_id).first()
+        messages_list = Message.objects.filter(recipient_doctor=doctor, status="unread").order_by("-date_sent")
+    elif role == "patient":
+        patient_id = request.session.get("patient_id")
+        patient = Patient.objects.filter(id=patient_id).first()
+        messages_list = Message.objects.filter(recipient_patient=patient, status="unread").order_by("-date_sent")
+    else:
+        messages_list = Message.objects.filter(status="unread").order_by("-date_sent")
+
+    if q:
+        messages_list = messages_list.filter(
+            Q(sender__icontains=q) |
+            Q(subject__icontains=q) |
+            Q(content__icontains=q)
+        )
+
+    paginator = Paginator(messages_list, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    unread_count = messages_list.count()
+    total_messages = Message.objects.all().count()
+
+    return render(request, "dashboard/messages_list.html", {
+        "page_obj": page_obj,
+        "unread_count": unread_count,
+        "total_messages": total_messages,
+        "query": q,
+        "view_type": "unread",
+        "session_role": role,
+    })
+
 
 
 #------ PROFILE VIEW ------
@@ -453,7 +555,6 @@ def add_patient(request):
 
     if request.method == "POST":
         name = request.POST.get("name")
-        email = request.POST.get("email")
         phone = request.POST.get("phone")
         age = request.POST.get("age")
         gender = request.POST.get("gender")
@@ -539,3 +640,63 @@ def add_appointment(request):
         return redirect("appointments")
 
     return render(request, "dashboard/add_appointment.html")
+
+@session_required
+def book_appointment(request):
+    role = request.session.get("user_role")
+
+    # Only patients can book
+    if role != "patient":
+        messages.error(request, "You must be logged in as a patient to book an appointment.")
+        return redirect("login")
+
+    patient_id = request.session.get("patient_id")
+    patient = Patient.objects.filter(id=patient_id).first()
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        phone = request.POST.get("phone")
+        age = request.POST.get("age")
+        gender = request.POST.get("gender")
+        department = request.POST.get("department")
+        doctor_id = request.POST.get("doctor")
+        issue = request.POST.get("issue")
+        appointment_date = request.POST.get("date")  # optional: user picks date/time
+
+        # Create patient if not exists
+        if not patient:
+            patient = Patient.objects.create(
+                name=name,
+                phone=phone,
+                age=age,
+                gender=gender
+            )
+            request.session["patient_id"] = patient.id
+
+        # Fetch doctor
+        doctor = Doctor.objects.filter(id=doctor_id, department=department).first()
+        if not doctor:
+            messages.error(request, "Selected doctor is not valid for the chosen department.")
+            return redirect("book_appointment")
+
+        # Create appointment
+        Appointment.objects.create(
+            patient=patient,
+            doctor=doctor,
+            date=timezone.now() if not appointment_date else appointment_date,
+            status="pending"
+        )
+
+        messages.success(request, f"Appointment booked successfully with Dr. {doctor.name}!")
+        return redirect("appointments")  # show in portal
+
+    # GET request: show form
+    departments = Doctor.objects.values_list("department", flat=True).distinct()
+    doctors = Doctor.objects.all()
+
+    return render(request, "book_appointment.html", {
+        "patient": patient,
+        "departments": departments,
+        "doctors": doctors,
+    })
+

@@ -19,5 +19,10 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("patients/add/", views.add_patient, name="add_patient"),
     path("appointment/add/", views.add_appointment, name="add_appointment"),
-
+    path("book-appointment/", views.book_appointment, name="book_appointment"),
+    path("patients/<int:pk>/", views.patient_detail, name="patient_detail"),
+    path("appointments/<int:appointment_id>/", views.appointment_detail, name="appointment_detail"),
+    path("reports/<int:report_id>/", views.report_detail, name="report_detail"),
+    path("messages/", views.messages_all, name="messages"),
+    path("messages/unread/", views.messages_unread, name="messages_unread"),
 ]

@@ -1352,6 +1352,59 @@ body {
   background: #800000;
 }
 
+.book-appointment-section {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.book-appointment-section h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: maroon;
+}
+
+.book-appointment-section .form-group {
+  margin-bottom: 15px;
+}
+
+.book-appointment-section label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.book-appointment-section input,
+.book-appointment-section select,
+.book-appointment-section textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.book-appointment-section .btn-submit {
+  display: block;
+  width: 100%;
+  background: maroon;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.book-appointment-section .btn-submit:hover {
+  background: darkred;
+}
+
+
 /* Messages container */
 .messages {
   width: 90%;

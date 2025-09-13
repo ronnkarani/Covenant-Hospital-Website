@@ -23,29 +23,30 @@
       </section>
 
       <!-- CARDS -->
-      <section class="messages-cards">
-        <div class="message-card unread">
-          <div class="card-content">
-            <h3>Unread Messages</h3>
-            <p class="card-count"><strong>{{ unread_count }}</strong></p>
-            <p class="card-note">Messages awaiting your attention</p>
-          </div>
-          <div class="card-actions">
-            <a href="#messages-table" class="btn-open">Open</a>
-          </div>
-        </div>
+<section class="messages-cards">
+  <div class="message-card unread {% if view_type == 'unread' %}active{% endif %}">
+    <div class="card-content">
+      <h3>Unread Messages</h3>
+      <p class="card-count"><strong>{{ unread_count }}</strong></p>
+      <p class="card-note">Messages awaiting your attention</p>
+    </div>
+    <div class="card-actions">
+      <a href="{% url 'messages_unread' %}" class="btn-open">Open</a>
+    </div>
+  </div>
 
-        <div class="message-card all">
-          <div class="card-content">
-            <h3>All Messages</h3>
-            <p class="card-count"><strong>{{ total_messages }}</strong></p>
-            <p class="card-note">All messages in the inbox</p>
-          </div>
-          <div class="card-actions">
-            <a href="#messages-table" class="btn-open">Open</a>
-          </div>
-        </div>
-      </section>
+  <div class="message-card all {% if view_type == 'all' %}active{% endif %}">
+    <div class="card-content">
+      <h3>All Messages</h3>
+      <p class="card-count"><strong>{{ total_messages }}</strong></p>
+      <p class="card-note">All messages in the inbox</p>
+    </div>
+    <div class="card-actions">
+      <a href="{% url 'messages' %}" class="btn-open">Open</a>
+    </div>
+  </div>
+</section>
+
 
       <!-- MESSAGES TABLE (namespaced, responsive) -->
       <section id="messages-table" class="messages-table-section">
