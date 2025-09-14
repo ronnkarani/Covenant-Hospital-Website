@@ -1,3 +1,23 @@
+// Scroll to Top Button
+const scrollBtn = document.getElementById("scrollToTopBtn");
+
+window.onscroll = function () {
+  if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+    scrollBtn.style.display = "block"; // show button
+  } else {
+    scrollBtn.style.display = "none"; // hide button
+  }
+};
+
+scrollBtn.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
+
+
+
 // =========================
 // Mobile Navbar Toggle
 // =========================

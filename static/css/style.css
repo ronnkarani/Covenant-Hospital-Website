@@ -11,6 +11,35 @@ body {
   color: #333;
   background: #f9f9f9;
 }
+
+/* Scroll to Top Button */
+#scrollToTopBtn {
+  display: none; /* hidden by default */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999; /* stays on top */
+  background-color: rgb(58, 5, 5);
+  color: white;
+  border: none;
+  outline: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+  transition: 0.3s;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #800000; /* darker maroon */
+}
+h1 {
+  font-size: 2rem;
+  margin: 20px 0;
+}
+
 .carousel {
     position: relative;
     width: 100%;
