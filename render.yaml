@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: covenanthospital      
+    env: python
+    plan: free
+    buildCommand: |
+        pip install -r requirements.txt &&
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput
+    startCommand: gunicorn covenant_hosp.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: covenant_hosp.settings
