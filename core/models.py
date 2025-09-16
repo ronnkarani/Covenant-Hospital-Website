@@ -138,12 +138,13 @@ class Patient(models.Model):
 
 # DOCTOR MODEL
 class Doctor(models.Model):
-    doctor_id = models.CharField(max_length=20, unique=True, editable=False, blank=True, null=True)  # ✅
+    doctor_id = models.CharField(max_length=20, unique=True, editable=False, blank=True, null=True)  
     name = models.CharField(max_length=200)
-    specialty = models.CharField(max_length=100)
+    specialty = models.CharField(max_length=100, default="General")
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    department = models.CharField(max_length=100)
+    department = models.CharField(max_length=100, default="General")
+    approved = models.BooleanField(default=False)   
 
     def save(self, *args, **kwargs):
         if not self.doctor_id:

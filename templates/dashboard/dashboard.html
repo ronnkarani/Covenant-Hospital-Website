@@ -57,7 +57,7 @@
       <tbody>
         {% for p in patients %}
           <tr>
-            <td>{{ p.id }}</td>
+            <td>{{ p.patients_id }}</td>
             <td class="patient-name">{{ p.name }}</td>
 
             {% if session_role == "doctor" %}
@@ -113,7 +113,13 @@
             <tbody>
               {% for appt in appointments %}
               <tr>
-                <td>{{ appt.id }}</td>
+                <td>{% if session_role == "doctor" %}
+    {{ appt.doctor.doctor_id }}
+  {% elif session_role == "patient" %}
+    {{ appt.patient.patient_id }}
+  {% else %}
+    {{ appt.patient.patient_id }} / {{ appt.doctor.doctor_id }}
+  {% endif %}</td>
                 <td>{{ appt.patient.name }}</td>
                 <td>{{ appt.patient.phone }}</td>
                 <td>{{ appt.date }}</td>
@@ -153,7 +159,13 @@
         <tbody>
           {% for rep in reports %}
           <tr>
-            <td>{{ rep.id }}</td>
+            <td>{% if rep.patient %}
+    {{ rep.patient.patient_id }}
+  {% elif rep.author %}
+    {{ rep.author.doctor_id }}
+  {% else %}
+    {{ rep.id }}
+  {% endif %}</td>
             <td>{{ rep.title }}</td>
             <td>{{ rep.date }}</td>
             <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>

@@ -20,10 +20,10 @@
       <form action="#" method="POST" class="signup-form">
         {% csrf_token %}
         <div class="form-group">
-          <label for="role">Register As</label>
-  <select name="role" required>
+          <label for="user_role">Register As</label>
+  <select name="user_role" required>
     <option value="patient">Patient</option>
-    <option value="staff">Staff</option>
+    <option value="doctor">Doctor</option>
     <!-- Doctor removed from public signup -->
   </select>
         </div>

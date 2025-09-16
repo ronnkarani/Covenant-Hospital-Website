@@ -21,16 +21,32 @@
       </div>
 
       <div class="appointment-info-card">
-        <p><strong>ID:</strong> {{ appointment.id }}</p>
-        <p><strong>Patient:</strong> {{ appointment.patient.name }}</p>
-        <p><strong>Phone:</strong> {{ appointment.patient.phone }}</p>
-        <p><strong>Date:</strong> {{ appointment.date|date:"Y-m-d H:i" }}</p>
-        <p><strong>Doctor:</strong> {% if appointment.doctor %}Dr. {{ appointment.doctor.name }}{% else %}N/A{% endif %}</p>
-        <p><strong>Status:</strong> 
-          <span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span>
-        </p>
-        <p><strong>Notes:</strong> {{ appointment.notes|default:"—" }}</p>
-      </div>
+  <p><strong>ID:</strong> 
+    {% if session_role == "doctor" %}
+      {{ appointment.doctor.doctor_id.}}
+    {% elif session_role == "patient" %}
+      {{ appointment.patient.patient_id  }}
+    {% else %}
+      Patient: {{ appointment.patient.patient_id }} / Doctor: {{ appointment.doctor.doctor_id }}
+    {% endif %}
+  </p>
+
+  <p><strong>Patient:</strong> {{ appointment.patient.name }}</p>
+  <p><strong>Phone:</strong> {{ appointment.patient.phone }}</p>
+  <p><strong>Date:</strong> {{ appointment.date|date:"Y-m-d H:i" }}</p>
+  <p><strong>Doctor:</strong> 
+    {% if appointment.doctor %}
+      Dr. {{ appointment.doctor.name }}
+    {% else %}
+      N/A
+    {% endif %}
+  </p>
+  <p><strong>Status:</strong> 
+    <span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span>
+  </p>
+  <p><strong>Notes:</strong> {{ appointment.notes|default:"—" }}</p>
+</div>
+
     </section>
   </main>
 

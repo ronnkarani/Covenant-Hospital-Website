@@ -27,8 +27,13 @@
 
       <section class="appointments-list-section">
         <div class="section-header">
-          <h3><i class="fa-solid fa-calendar-check"></i> Appointments</h3>
-          <a href="{% url 'add_appointment' %}" class="btn-view-all">Add New</a>
+          
+          {% if session_rolerole == "doctor" %}
+    <h3><i class="fa-solid fa-calendar-check"></i> Appointments</h3>
+    <a href="{% url 'add_patient' %}" class="btn-view-all">Add New</a>
+  {% elif session_role == "patient" %}
+    <h3><i class="fa-solid fa-user"></i> Your Appointments</h3>
+  {% endif %}
         </div>
 
         <div class="appointments-table-wrapper">
@@ -46,7 +51,15 @@
             <tbody>
               {% for appt in appointments %}
               <tr>
-                <td>{{ appt.id }}</td>
+                <td>
+  {% if session_role == "doctor" %}
+    {{ appt.patient.patient_id }}
+  {% elif session_role == "patient" %}
+    {{ appt.doctor.doctor_id }}
+  {% else %}
+    {{ appt.patient.patient_id }} / {{ appt.doctor.doctor_id }}
+  {% endif %}
+</td>
                 <td>{{ appt.patient.name }}</td>
                 <td>{{ appt.patient.phone }}</td>
                 <td>{{ appt.date }}</td>

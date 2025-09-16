@@ -61,7 +61,7 @@
   {% for p in patients_page %}
     {% if role == "doctor" %}
       <tr>
-        <td>{{ p.id }}</td>
+        <td>{{ p.doctor_id }}</td>
         <td class="patient-name">{{ p.name }}</td>
         <td>{{ p.phone }}</td>
         <td>{{ p.department }}</td>
@@ -76,7 +76,7 @@
     {% elif role == "patient" %}
       <tr>
                     <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
-        <td>{{ p.id }}</td>
+        <td>{{ p.patient_id }}</td>
         <td class="patient-name">{{ p.name }}</td>
         <td>
           {% with appt=p.appointments.first %}

@@ -11,7 +11,7 @@ from django.conf import settings
 from django.db.models import Q
 from .decorators import session_required
 from django.utils import timezone
-
+from django.utils.safestring import mark_safe
 
 #LOGIN VIEW
 def signup_view(request):
@@ -20,7 +20,7 @@ def signup_view(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
-        role = request.POST.get("role")
+        role = request.POST.get("user_role", "").strip().lower()
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match")
@@ -36,43 +36,127 @@ def signup_view(request):
         profile, created = Profile.objects.get_or_create(user=user)
 
         # ✅ Role handling
-        if role.lower() == "doctor":
-            profile.role = "pending"   # doctor must be approved first
+        if role == "doctor":
+            profile.role = "pending"
+            doctor = Doctor.objects.create(
+                name=username,
+                specialty="General",
+                department="General",
+                approved=False,
+                email=email
+            )
+            hospital_id = doctor.doctor_id   # assign doctor ID
         else:
             profile.role = "patient"
+            patient = Patient.objects.create(
+            name=username,
+            phone="N/A",    # or capture from signup form later
+            age=0,          # or optional field on signup
+            gender="M"      # or optional field on signup
+            )
+            # link hospital_id for login
+            profile.hospital_id = patient.patient_id
+            profile.save()
+            hospital_id = patient.patient_id   # assign patient ID
+
 
         profile.save()
 
-        messages.success(request, f"Account created successfully! Your Hospital ID is {profile.hospital_id}. Awaiting approval if needed.")
+        # ✅ Send welcome email
+        if email:
+            try:
+                if role == "doctor":
+                    subject = "Welcome to Covenant Hospital - Pending Approval"
+                    message = (
+                        f"Hello Dr. {username},\n\n"
+                        f"Thank you for registering with Covenant Hospital.\n"
+                        f"Your account is currently pending approval by the admin team.\n\n"
+                        f"Once approved, you will be able to log in using your Doctor ID: {doctor.doctor_id}\n\n"
+                        f"We will notify you once your account is approved.\n\n"
+                        f"Regards,\nCovenant Hospital Admin"
+                    )
+                else:  # patient
+                    subject = "Welcome to Covenant Hospital"
+                    message = (
+                        f"Hello {username},\n\n"
+                        f"Thank you for registering with Covenant Hospital.\n"
+                        f"You can now log in using your Patient ID: {profile.hospital_id}\n\n"
+                        f"Regards,\nCovenant Hospital Admin"
+                    )
+
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                messages.warning(request, f"⚠️ Account created, but email could not be sent: {e}")
+
+         # ✅ Role-specific success messages shown on login page
+        if role == "doctor":
+            messages.success(
+                request,
+                mark_safe(
+                    f"🎉 Account created successfully for Dr. {username}! "
+                    f"Your Doctor ID is <strong style='color:maroon;'>{doctor.doctor_id}</strong>. "
+                    f"You will be able to log in once approved by the admin."
+                )
+            )
+        else:
+            messages.success(
+                request,
+                mark_safe(
+                    f"🎉 Account created successfully for {username}! "
+                    f"Your Patient ID is <strong style='color:maroon;'>{profile.hospital_id}</strong>. "
+                    f"You can now log in immediately using this ID."
+                )
+            )
+            request.session["new_hospital_id"] = hospital_id
         return redirect("login")
 
     return render(request, "signup.html")
 
-
 def login_view(request):
+    prefill_id = request.session.pop("new_hospital_id", "")  # remove after reading
     if request.method == "POST":
         hospital_id = request.POST.get("hospital_id", "").strip()
 
         # Try Doctor login
         doctor = Doctor.objects.filter(doctor_id=hospital_id).first()
         if doctor:
+            if not doctor.approved:
+                messages.error(request, "Your account is pending approval. Please wait for admin verification.")
+                return redirect("login")
+
+            # ensure profile role matches approval
+            profile = Profile.objects.filter(user__username=doctor.name).first()
+            if profile and profile.role != "doctor":
+                profile.role = "doctor"
+                profile.save()
+
             request.session["user_role"] = "doctor"
             request.session["doctor_id"] = doctor.id
+            request.session["username"] = doctor.name   # 👈 for navbar
             messages.success(request, f"Welcome Dr. {doctor.name}")
-            return redirect("index")  # ✅ send to homepage
+            return redirect("dashboard")
 
         # Try Patient login
         patient = Patient.objects.filter(patient_id=hospital_id).first()
         if patient:
             request.session["user_role"] = "patient"
             request.session["patient_id"] = patient.id
+            request.session["username"] = patient.name
             messages.success(request, f"Welcome {patient.name}")
-            return redirect("index")  # ✅ send to homepage
+            return redirect("dashboard")
 
         # If no match
         messages.error(request, "Invalid Doctor ID or Patient ID.")
 
-    return render(request, "login.html")
+    return render(request, "login.html", {"prefill_id": prefill_id})
+
+
 
 
 def logout_view(request):
@@ -306,7 +390,7 @@ def patients(request):
 
 def patient_detail(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
-    role = request.session.get("role", None)  # doctor or patient
+    role = request.session.get("user_role", None)  # doctor or patient
     return render(request, "dashboard/patient_detail.html", {
         "patient": patient,
         "role": role
@@ -350,7 +434,7 @@ def appointments(request):
 
 def appointment_detail(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
-    role = request.session.get("role", None)  # if you’re using role in session
+    role = request.session.get("user_role", None)  # if you’re using role in session
 
     return render(request, "dashboard/appointment_detail.html", {
         "appointment": appointment,
@@ -396,7 +480,7 @@ def reports(request):
 
 def report_detail(request, report_id):
     report = get_object_or_404(Report, id=report_id)
-    role = request.session.get("role")
+    role = request.session.get("user_role")
     return render(request, "dashboard/report_detail.html", {"report": report, "role": role})
 
 

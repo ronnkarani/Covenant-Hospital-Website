@@ -186,6 +186,10 @@ body {
   gap: 10px;
   font-size: 18px;
 }
+.dashboard-navbar .nav-left a{
+  text-decoration: none; /* remove underline */
+  color: inherit;
+}
 .dashboard-navbar .nav-left i {
   font-size: 20px;
 }

@@ -56,7 +56,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "core.context_processors.session_user",
+                "core.context_processors.session_info",
             ],
         },
     },
@@ -141,8 +141,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "karanironny25@gmail.com"       # your Gmail
-EMAIL_HOST_PASSWORD = "hdgfwkrwpehmerzm"     # use App Password (not normal password!)
+EMAIL_HOST_USER = "karanironny25@gmail.com" # your Gmail
+EMAIL_HOST_PASSWORD = "hdgfwkrwpehmerzm"  # use App Password (not normal password!)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
