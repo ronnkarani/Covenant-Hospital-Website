@@ -16,8 +16,8 @@
 
   <div class="patient-card">
     <div class="patient-info">
-      <p><strong>ID:</strong> {{ patient.id }}</p>
-      <p><strong>Name:</strong> {{ patient.name }}</p>
+  <p><strong>ID:</strong> {{ patient.patient_id }}</p>
+        <p><strong>Name:</strong> {{ patient.name }}</p>
       <p><strong>Phone:</strong> {{ patient.phone }}</p>
       <p><strong>Department:</strong> {{ patient.department }}</p>
       <p><strong>Age:</strong> {{ patient.age }}</p>
@@ -26,7 +26,7 @@
 
     {% if role == "doctor" %}
     <div class="patient-actions">
-      <a href="{% url 'view_patient' patient.id %}" class="btn-action update">Edit</a>
+      <a href="{% url 'patient_detail' patient.patient_id %}" class="btn-action update">Edit</a>
       <a href="" class="btn-action delete">Delete</a>
     </div>
     {% endif %}

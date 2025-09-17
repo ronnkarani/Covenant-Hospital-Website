@@ -28,7 +28,7 @@
       <section class="appointments-list-section">
         <div class="section-header">
           
-          {% if session_rolerole == "doctor" %}
+          {% if session_role == "doctor" %}
     <h3><i class="fa-solid fa-calendar-check"></i> Appointments</h3>
     <a href="{% url 'add_patient' %}" class="btn-view-all">Add New</a>
   {% elif session_role == "patient" %}
@@ -66,8 +66,6 @@
                 <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
                 <td>
                   <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
-                  <a href="#" class="btn-action update">Update</a>
-                  <a href="#" class="btn-action delete">Delete</a>
                 </td>
               </tr>
               {% empty %}

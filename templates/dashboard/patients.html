@@ -61,21 +61,23 @@
   {% for p in patients_page %}
     {% if role == "doctor" %}
       <tr>
-        <td>{{ p.doctor_id }}</td>
+        <td>{{ p.patient_id }}</td>   {# FIX: show patient_id, not doctor_id #}
         <td class="patient-name">{{ p.name }}</td>
         <td>{{ p.phone }}</td>
-        <td>{{ p.department }}</td>
+        <td>
+          {% with appt=p.appointments.first %}
+            {% if appt and appt.doctor %}{{ appt.doctor.department }}{% else %}N/A{% endif %}
+          {% endwith %}
+        </td>
         <td>{{ p.age }}</td>
         <td>{{ p.gender }}</td>
         <td>
-          <a href="{% url 'patient_detail' p.id %}" class="btn-action view">View</a>
-          <a href="" class="btn-action update">Edit</a>
-          <a href="" class="btn-action delete">Delete</a>
+          <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
+          
         </td>
       </tr>
     {% elif role == "patient" %}
-      <tr>
-                    <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
+      <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
         <td>{{ p.patient_id }}</td>
         <td class="patient-name">{{ p.name }}</td>
         <td>
@@ -94,6 +96,7 @@
     <tr><td colspan="7">No patients found.</td></tr>
   {% endfor %}
 </tbody>
+
 
       </table>
     </div>

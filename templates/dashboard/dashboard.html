@@ -42,7 +42,6 @@
           <th>Name</th>
           {% if session_role == "doctor" %}
             <th>Phone</th>
-            <th>Department</th>
             <th>Age</th>
             <th>Gender</th>
             <th>Actions</th>
@@ -57,26 +56,33 @@
       <tbody>
         {% for p in patients %}
           <tr>
-            <td>{{ p.patients_id }}</td>
+            <td>{{ p.patient_id }}</td>
             <td class="patient-name">{{ p.name }}</td>
 
             {% if session_role == "doctor" %}
               <td>{{ p.phone }}</td>
-              <td>{{ p.department }}</td>
               <td>{{ p.age }}</td>
               <td>{{ p.gender }}</td>
               <td>
-                <a href="{% url 'patient_detail' p.id %}" class="btn-action view">View</a>
-                <a href="" class="btn-action update">Edit</a>
-                <a href="" class="btn-action delete">Delete</a>
-              </td>
+  <div class="action-buttons">
+    <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
+
+    <a href="" class="btn-action update">Update</a>
+    <a href="" class="btn-action delete">Delete</a>
+  </div>
+</td>
             {% else %}
-              <td>{{ p.department }}</td>
               <td>
-                {% with doctor=p.appointments.first.doctor %}
-                  {% if doctor %}Dr. {{ doctor.name }}{% else %}N/A{% endif %}
+                {% with appt=p.appointments.first %}
+                  {% if appt and appt.doctor %}
+                    {{ appt.doctor.department }}
+                  {% else %}
+                    N/A
+                  {% endif %}
                 {% endwith %}
               </td>
+
+
               <td>{{ p.date_added|date:"Y-m-d" }}</td>
               <td>
                 <a href="" class="btn-action view">View</a>
@@ -114,9 +120,9 @@
               {% for appt in appointments %}
               <tr>
                 <td>{% if session_role == "doctor" %}
-    {{ appt.doctor.doctor_id }}
-  {% elif session_role == "patient" %}
     {{ appt.patient.patient_id }}
+  {% elif session_role == "patient" %}
+    {{ appt.doctor.doctor_id }}
   {% else %}
     {{ appt.patient.patient_id }} / {{ appt.doctor.doctor_id }}
   {% endif %}</td>
@@ -125,9 +131,13 @@
                 <td>{{ appt.date }}</td>
                 <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
                 <td>
-                  <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
-                  <a href="#" class="btn-action update">Update</a>
-                </td>
+  <div class="action-buttons">
+    <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
+    <a href="" class="btn-action update">Update</a>
+    <a href="" class="btn-action delete">Delete</a>
+  </div>
+</td>
+                
               </tr>
               {% empty %}
               <tr><td colspan="5">No appointments found.</td></tr>
@@ -169,10 +179,15 @@
             <td>{{ rep.title }}</td>
             <td>{{ rep.date }}</td>
             <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
+            
             <td>
-              <a href="{% url 'report_detail' rep.id %}" class="btn-action view">View</a>
-              <a href="#" class="btn-action update">Update</a>
-            </td>
+  <div class="action-buttons">
+    <a href="{% url 'report_detail' rep.id %}" class="btn-action view">View</a>
+    <a href="" class="btn-action update">Update</a>
+    <a href="" class="btn-action delete">Delete</a>
+  </div>
+</td>
+
           </tr>
           {% empty %}
           <tr><td colspan="5">No reports found.</td></tr>

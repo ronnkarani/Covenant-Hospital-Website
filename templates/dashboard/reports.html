@@ -47,23 +47,34 @@
         </tr>
       </thead>
       <tbody>
-        {% for rep in reports %}
-        <tr>
-          <td>{{ rep.id }}</td>
-          <td>{{ rep.title }}</td>
-          <td>{{ rep.author }}</td>
-          <td>{{ rep.date }}</td>
-          <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
-          <td>
-            <a href="{% url 'report_detail' rep.id %}" class="btn-action view">View</a>
-            <a href="#" class="btn-action update">Update</a>
-            <a href="#" class="btn-action delete">Delete</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6">No reports found.</td></tr>
-        {% endfor %}
-      </tbody>
+  {% for rep in reports %}
+  <tr>
+    <td>
+      {% if rep.patient %}
+        {{ rep.patient.patient_id }}
+      {% else %}
+        {{ rep.id }}
+      {% endif %}
+    </td>
+    <td>{{ rep.title }}</td>
+    <td>
+      {% if rep.author %}
+        Dr. {{ rep.author.name }}
+      {% else %}
+        N/A
+      {% endif %}
+    </td>
+    <td>{{ rep.date }}</td>
+    <td><span class="status {{ rep.status|lower }}">{{ rep.status }}</span></td>
+    <td>
+      <a href="{% url 'report_detail' rep.id %}" class="btn-action view">View</a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6">No reports found.</td></tr>
+  {% endfor %}
+</tbody>
+
     </table>
   </div>
 

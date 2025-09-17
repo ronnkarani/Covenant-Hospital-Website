@@ -315,18 +315,22 @@ body {
 .user-profile h2 {
   font-size: 22px;
   margin-bottom: 5px;
-  color: rgb(206, 97, 97);
+  color: rgb(110, 17, 17);
   display: flex;
   align-items: center;
   gap: 8px;
 }
+.user-profile .id {
+  font-size: 18px;
+  color: #9fa102;
+}
 .user-profile .role {
-  font-size: 14px;
-  color: #181818;
+  font-size: 18px;
+  color: #2bb64d;
 }
 .user-profile .email {
-  font-size: 14px;
-  color: #000000;
+  font-size: 18px;
+  color: #1d4ba0;
 }
 
 /* CTA Buttons */
@@ -414,19 +418,48 @@ body {
 .status.pending { background: #fff3cd; color: #856404; }
 .status.concluded { background: #d4edda; color: #155724; }
 .status.cancelled { background: #f8d7da; color: #721c24; }
-
-/* Appointment Actions */
-.btn-action {
-  padding: 5px 10px;
-  font-size: 13px;
-  border-radius: 4px;
+/* Appointments table - keep action buttons inline */
+/* ================== APPOINTMENT ACTION BUTTONS ================== */
+.appointments-table .btn-action {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 2px;
+  font-size: 0.9rem;
+  border-radius: 6px;
   text-decoration: none;
-  margin-right: 5px;
+  color: #fff;
+  transition: background 0.2s ease-in-out;
 }
-.btn-action.view { background: #007bff; color: #fff; }
-.btn-action.update { background: #ffc107; color: #000; }
-.btn-action.delete { background: #dc3545; color: #fff; }
-.btn-action:hover { opacity: 0.8; }
+
+/* Specific colors for each action */
+.appointments-table .btn-action.view {
+  background-color: #3498db; /* blue */
+}
+.appointments-table .btn-action.view:hover {
+  background-color: #217dbb;
+}
+
+.appointments-table .btn-action.update {
+  background-color: #f39c12; /* orange */
+}
+.appointments-table .btn-action.update:hover {
+  background-color: #d68910;
+}
+
+.appointments-table .btn-action.delete {
+  background-color: #e74c3c; /* red */
+}
+.appointments-table .btn-action.delete:hover {
+  background-color: #c0392b;
+}
+
+/* Group actions neatly */
+.appointments-table .action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+
 
 /* Patients Table */
 .patients-table {
@@ -441,9 +474,12 @@ body {
   text-align: center;
 }
 .patients-table th {
-  background: #f3e6e6;
+  background: #f8acac;
   color: maroon;
 }
+
+
+
 
 /* Reports Section */
 .reports {
@@ -466,31 +502,37 @@ body {
 }
 
 .reports-table th {
-  background: #f2f2f2;
+  background: #ffadad;
+  color: maroon;
 }
 
-.btn-report {
-  padding: 5px 10px;
+/* Universal action buttons layout */
+.action-buttons {
+  display: flex;
+  gap: 8px;             /* spacing between buttons */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Universal button styling */
+.btn-action {
+  display: inline-block;
+  padding: 6px 12px;
   font-size: 13px;
   border-radius: 4px;
   text-decoration: none;
-  margin-right: 5px;
+  transition: 0.2s;
 }
 
-.btn-report.view {
-  background: #4CAF50;
-  color: #fff;
+/* Variants */
+.btn-action.view { background: #007bff; color: #fff; }
+.btn-action.update { background: #ffc107; color: #000; }
+.btn-action.delete { background: #dc3545; color: #fff; }
+
+.btn-action:hover {
+  opacity: 0.85;
 }
 
-.btn-report.update {
-  background: #2196F3;
-  color: #fff;
-}
-
-.btn-report.delete {
-  background: #f44336;
-  color: #fff;
-}
 
 /* Messages Section */
 .messages {
@@ -514,7 +556,7 @@ body {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 15px;
-  background: maroon;
+  background: rgb(253, 109, 109);
   color: #fff;
   border-radius: 5px;
   text-decoration: none;
@@ -574,18 +616,24 @@ body {
 /* Unique table class to avoid collisions */
 .patients-list-table {
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   min-width: 700px;
   font-size: 14px;
 }
 
 .patients-list-table thead th {
-  background: #5c1e1e;
-  color: #fff;
+  background: #ff9797;
+  color: maroon;
   text-align: left;
   padding: 12px;
   border-bottom: 1px solid #e6dede;
+}
+.patients-list-table th,
+.patients-list-table td {
+  border: 1px solid #8f8d8d;   /* ✅ Add border lines */
+  padding: 8px;
+  text-align: left;
 }
 
 .patients-list-table tbody td {
@@ -637,8 +685,8 @@ body {
 }
 
 .patients-pagination .pagination-list .active-page {
-  background: maroon;
-  color: #fff;
+  background: rgb(250, 156, 156);
+  color: white;
   font-weight: bold;
 }
 
@@ -697,8 +745,8 @@ body {
   border-bottom: 1px solid #ddd;
 }
 .appointments-page .appointments-table th {
-  background: #5c1e1e;
-  color: #fff;
+  background: #fda5a5;
+  color: maroon;
 }
 .appointments-page .appointments-table tr:hover {
   background: #f9f9f9;
@@ -721,10 +769,10 @@ body {
 }
 .appointments-page .pagination-list li a {
   text-decoration: none;
-  color: maroon;
+  color: rgb(245, 154, 154);
 }
 .appointments-page .pagination-list .active-page {
-  background: maroon;
+  background: rgb(245, 154, 154);
   color: #fff;
 }
 .appointments-page .pagination-list .disabled {
@@ -780,8 +828,8 @@ body {
   border-bottom: 1px solid #ddd;
 }
 .reports-page .reports-table th {
-  background: #5c1e1e;
-  color: #fff;
+  background: #f59d9d;
+  color: maroon;
 }
 .reports-page .reports-table tr:hover {
   background: #f9f9f9;
@@ -807,7 +855,7 @@ body {
   color: maroon;
 }
 .reports-page .pagination-list .active-page {
-  background: maroon;
+  background: rgb(255, 167, 167);
   color: #fff;
 }
 .reports-page .pagination-list .disabled {
@@ -914,8 +962,8 @@ body {
 }
 
 .appointments-table th {
-  background: maroon;
-  color: #fff;
+  background: rgb(253, 184, 184);
+  color: maroon;
 }
 
 .appointments-table tr:nth-child(even) {
@@ -952,7 +1000,7 @@ body {
 
 .appointment-detail-section .detail-header h3 {
   font-size: 1.4rem;
-  color: #333;
+  color: #851111;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1047,7 +1095,7 @@ body {
 
 .report-detail-section .detail-header h3 {
   font-size: 1.4rem;
-  color: #333;
+  color: #791c1c;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1137,8 +1185,33 @@ body {
    Messages page (namespaced)
    =========================== */
 
-.messages-page { /* container root for messages page */
-  /* nothing required here; used as namespace for child selectors */
+.messages-page .messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  font-size: 14px;
+}
+.messages-page .messages-table th,
+.messages-page .messages-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: middle;
+  border: 1px solid #ddd;   /* ✅ add border */
+}
+
+.messages-page .messages-table thead th {
+  background: rgb(248, 124, 124);
+  color: maroon;
+  font-weight: 600;
+  border: 1px solid #ccc;   /* ✅ border on header too */
+}
+
+.messages-page .messages-table tbody tr:nth-child(even) {
+  background: #fffdfd;
+}
+
+.messages-page .messages-table tbody tr:nth-child(odd) {
+  background: #ffffff;
 }
 
 /* --- Search (matches patients look) --- */
@@ -1262,8 +1335,8 @@ body {
 }
 
 .messages-page .messages-table thead th {
-  background: maroon;
-  color: #fff;
+  background: rgb(248, 124, 124);
+  color: maroon;
   font-weight: 600;
 }
 
@@ -1332,10 +1405,10 @@ body {
 }
 
 .messages-page .messages-pagination .pagination-list li.active-page {
-  background: maroon;
+  background: rgb(252, 145, 145);
   color: #fff;
   font-weight: 700;
-  border-color: maroon;
+  border-color: rgb(104, 103, 103);
 }
 
 .messages-page .messages-pagination .pagination-list li.disabled {
@@ -1413,6 +1486,36 @@ body {
 }
 
 /* ---------- MESSAGES LIST (scoped) ---------- */
+/* Messages List Table */
+.messages-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  font-size: 14px;
+}
+
+.messages-list-table th,
+.messages-list-table td {
+  border: 1px solid #ddd;   /* ✅ add border lines */
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.messages-list-table thead th {
+  background: #ff9d9d;  /* light red for header */
+  color: maroon;
+  font-weight: 600;
+  border: 1px solid #ccc;
+}
+
+.messages-list-table tbody tr:nth-child(even) {
+  background: #fffdfd;
+}
+
+.messages-list-table tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+
 .messages-list-page h2 {
   font-size: 1.5rem;
   margin-bottom: 0.25rem;
@@ -1440,7 +1543,7 @@ body {
 
 .messages-list-search-btn {
   padding: 0.6rem 1rem;
-  background: maroon;
+  background: rgb(255, 110, 110);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -1506,7 +1609,7 @@ body {
 }
 
 .messages-list-pagination li.active {
-  background: maroon;
+  background: rgb(255, 140, 140);
   color: #fff;
 }
 

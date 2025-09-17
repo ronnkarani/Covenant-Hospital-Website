@@ -131,3 +131,17 @@ document.addEventListener("DOMContentLoaded", function () {
     doctorSelect.value = "";
   });
 
+/* ======================
+     Signup Role → Department Field Toggle
+  ====================== */
+  const roleSelect = document.querySelector("select[name='user_role']");
+  const deptField = document.querySelector(".doctor-field");
+
+  if (roleSelect && deptField) {
+    const toggleDept = () => {
+      deptField.style.display = roleSelect.value === "doctor" ? "block" : "none";
+    };
+
+    roleSelect.addEventListener("change", toggleDept);
+    toggleDept(); // run once at load
+  }

@@ -78,13 +78,46 @@
     <!-- Page Content -->
     <main class="dashboard-main">
       <!-- Profile Section -->
-      <section class="user-profile">
-        <h2><i class="fa-solid fa-user-circle"></i> Welcome, 
-          <span class="username">{{ session_name }}</span>
-        </h2>
-        <p class="role">Doctor - Cardiology Department</p>
-        <p class="email"><i class="fa-solid fa-envelope"></i> {{ user.email }}</p>
-      </section>
+    <section class="user-profile">
+
+  {% if session_role == "doctor" and doctor %}
+    <h2>
+      <i class="fa-solid fa-user-circle"></i> Welcome, 
+      <span class="username">{{ doctor.name }}</span>
+    </h2>
+    <p class="id">
+      <i class="fa-solid fa-id-badge"></i> ID: <strong>{{ doctor.doctor_id }}</strong>
+    </p>
+    <p class="role">
+      <i class="fa-solid fa-stethoscope"></i> Department: <strong>{{ doctor.department }}</strong>
+    </p>
+    <p class="email">
+      <i class="fa-solid fa-envelope"></i> <strong>{{ doctor.email }}</strong>
+    </p>
+    <p class="phone">
+      <i class="fa-solid fa-phone"></i><strong> {{ doctor.phone }}</strong>
+    </p>
+
+  {% elif session_role == "patient" and patient %}
+    <h2>
+      <i class="fa-solid fa-user-circle"></i> Welcome, 
+      <span class="username">{{ patient.name }}</span>
+    </h2>
+    <p class="id">
+      <i class="fa-solid fa-id-badge"></i> ID: {{ patient.patient_id }}
+    </p>
+    <p class="email">
+      <i class="fa-solid fa-envelope"></i> {{ user.email }}
+    </p>
+    <p class="phone">
+      <i class="fa-solid fa-phone"></i> {{ patient.phone }}
+    </p>
+  {% endif %}
+
+</section>
+
+
+
 
         <!-- ================== CTA CARDS ================== -->
         <div class="cta-buttons">

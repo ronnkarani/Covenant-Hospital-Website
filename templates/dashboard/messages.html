@@ -54,11 +54,12 @@
           <table class="messages-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>No</th>
                 <th>Sender</th>
                 <th>Subject</th>
                 <th>Content</th>
                 <th>Status</th>
+                <th>Actions</th> 
               </tr>
             </thead>
             <tbody>
@@ -75,6 +76,11 @@
                       <span class="status concluded">Read</span>
                     {% endif %}
                   </td>
+                  <td class="actions">
+              <a href="{% url 'message_detail' msg.id %}" class="action-btn view">View</a>
+              <a href="" class="action-btn update">Update</a>
+              <a href="" class="action-btn delete">Delete</a>
+            </td>
                 </tr>
               {% empty %}
                 <tr><td colspan="5">No messages found.</td></tr>

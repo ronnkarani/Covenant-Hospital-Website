@@ -21,11 +21,19 @@
         {% csrf_token %}
         <div class="form-group">
           <label for="user_role">Register As</label>
-  <select name="user_role" required>
-    <option value="patient">Patient</option>
-    <option value="doctor">Doctor</option>
-    <!-- Doctor removed from public signup -->
-  </select>
+          <select name="user_role" required>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+          </select>
+        </div>
+        <!-- Department dropdown (doctor only) -->
+        <div class="form-group doctor-field" style="display:none;">
+          <label for="department">Select Department</label>
+          <select name="department" id="department">
+            {% for dept in departments %}
+              <option value="{{ dept.id }}">{{ dept.name }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="form-group">
           <label for="username">Username</label>
@@ -34,6 +42,10 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
         </div>
         <div class="form-group">
           <label for="password">Password</label>

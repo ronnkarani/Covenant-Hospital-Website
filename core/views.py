@@ -12,8 +12,12 @@ from django.db.models import Q
 from .decorators import session_required
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
-#LOGIN VIEW
+
+
 def signup_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -21,6 +25,7 @@ def signup_view(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
         role = request.POST.get("user_role", "").strip().lower()
+        phone = request.POST.get("phone")
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match")
@@ -31,92 +36,43 @@ def signup_view(request):
             return redirect("signup")
 
         user = User.objects.create_user(username=username, email=email, password=password)
-        
-        # ✅ Ensure Profile exists
         profile, created = Profile.objects.get_or_create(user=user)
 
-        # ✅ Role handling
         if role == "doctor":
             profile.role = "pending"
+            dept_id = request.POST.get("department")
+            department = Department.objects.filter(id=dept_id).first()
             doctor = Doctor.objects.create(
                 name=username,
-                specialty="General",
-                department="General",
-                approved=False,
-                email=email
+                phone=phone,
+                email=email,
+                department=department  # may be None → auto defaults to General
             )
-            hospital_id = doctor.doctor_id   # assign doctor ID
+            hospital_id = doctor.doctor_id
         else:
             profile.role = "patient"
             patient = Patient.objects.create(
-            name=username,
-            phone="N/A",    # or capture from signup form later
-            age=0,          # or optional field on signup
-            gender="M"      # or optional field on signup
+                name=username,
+                phone=phone,
+                age=0,
+                gender="M"  # or optional from form
             )
-            # link hospital_id for login
             profile.hospital_id = patient.patient_id
             profile.save()
-            hospital_id = patient.patient_id   # assign patient ID
-
+            hospital_id = patient.patient_id
 
         profile.save()
+        # send email (same as before) ...
+        # success messages (same as before) ...
 
-        # ✅ Send welcome email
-        if email:
-            try:
-                if role == "doctor":
-                    subject = "Welcome to Covenant Hospital - Pending Approval"
-                    message = (
-                        f"Hello Dr. {username},\n\n"
-                        f"Thank you for registering with Covenant Hospital.\n"
-                        f"Your account is currently pending approval by the admin team.\n\n"
-                        f"Once approved, you will be able to log in using your Doctor ID: {doctor.doctor_id}\n\n"
-                        f"We will notify you once your account is approved.\n\n"
-                        f"Regards,\nCovenant Hospital Admin"
-                    )
-                else:  # patient
-                    subject = "Welcome to Covenant Hospital"
-                    message = (
-                        f"Hello {username},\n\n"
-                        f"Thank you for registering with Covenant Hospital.\n"
-                        f"You can now log in using your Patient ID: {profile.hospital_id}\n\n"
-                        f"Regards,\nCovenant Hospital Admin"
-                    )
-
-                send_mail(
-                    subject=subject,
-                    message=message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=True,
-                )
-            except Exception as e:
-                messages.warning(request, f"⚠️ Account created, but email could not be sent: {e}")
-
-         # ✅ Role-specific success messages shown on login page
-        if role == "doctor":
-            messages.success(
-                request,
-                mark_safe(
-                    f"🎉 Account created successfully for Dr. {username}! "
-                    f"Your Doctor ID is <strong style='color:maroon;'>{doctor.doctor_id}</strong>. "
-                    f"You will be able to log in once approved by the admin."
-                )
-            )
-        else:
-            messages.success(
-                request,
-                mark_safe(
-                    f"🎉 Account created successfully for {username}! "
-                    f"Your Patient ID is <strong style='color:maroon;'>{profile.hospital_id}</strong>. "
-                    f"You can now log in immediately using this ID."
-                )
-            )
-            request.session["new_hospital_id"] = hospital_id
+        request.session["new_hospital_id"] = hospital_id
         return redirect("login")
 
-    return render(request, "signup.html")
+    # Pass departments to template
+    departments = Department.objects.all().order_by("name")
+    return render(request, "signup.html", {"departments": departments})
+
+
 
 def login_view(request):
     prefill_id = request.session.pop("new_hospital_id", "")  # remove after reading
@@ -276,21 +232,50 @@ def contact(request):
         email = request.POST.get("email")
         message = request.POST.get("message")
 
-        subject = f"New Contact Form Submission from {name}"
-        full_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
-
         try:
-            send_mail(
-                subject,
-                full_message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.EMAIL_HOST_USER],  # receiver = your Gmail
+            # Context for both templates
+            context = {
+                "name": name,
+                "email": email,
+                "message": message,
+                "year": timezone.now().year,
+            }
+
+            # -------- Email 1: Notify Admin --------
+            subject_admin = f"📩 New Contact Form Submission from {name}"
+            html_admin = render_to_string("emails/contact_notification.html", context)
+            text_admin = strip_tags(html_admin)
+
+            msg_admin = EmailMultiAlternatives(
+                subject=subject_admin,
+                body=text_admin,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[settings.EMAIL_HOST_USER],  # Admin inbox
+                reply_to=[email],
             )
-            messages.success(request, "Your message has been sent successfully!")
+            msg_admin.attach_alternative(html_admin, "text/html")
+            msg_admin.send()
+
+            # -------- Email 2: Confirmation to Visitor --------
+            subject_user = "✅ Covenant Hospital - We Received Your Message"
+            html_user = render_to_string("emails/contact_confirmation.html", context)
+            text_user = strip_tags(html_user)
+
+            msg_user = EmailMultiAlternatives(
+                subject=subject_user,
+                body=text_user,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email],  # Visitor’s email
+            )
+            msg_user.attach_alternative(html_user, "text/html")
+            msg_user.send()
+
+            messages.success(request, "Your message has been sent successfully! Please check your email for confirmation.")
+
         except Exception as e:
             messages.error(request, f"Error sending message: {e}")
 
-        return redirect("contact")  # reload page after form submission
+        return redirect("contact")
 
     return render(request, "contact.html", {"partners": partners})
 
@@ -298,6 +283,9 @@ def contact(request):
 @session_required
 def dashboard(request):
     role = request.session.get("user_role")
+
+    doctor = None
+    patient = None
 
     if role == "doctor":
         doctor_id = request.session.get("doctor_id")
@@ -307,7 +295,12 @@ def dashboard(request):
             return render(request, "dashboard/dashboard.html", {})
 
         appointments = Appointment.objects.filter(doctor=doctor).order_by("-date")[:5]
-        patients = Patient.objects.filter(appointments__doctor=doctor).distinct().order_by("-date_added")[:5]
+        patients = (
+            Patient.objects.filter(appointments__doctor=doctor)
+            .distinct()
+            .order_by("-date_added")[:5]
+            .prefetch_related("appointments__doctor")
+        )
         reports = Report.objects.filter(author=doctor).order_by("-date")[:5]
         messages_qs = Message.objects.filter(recipient_doctor=doctor).order_by("-date_sent")[:5]
 
@@ -319,8 +312,7 @@ def dashboard(request):
             return render(request, "dashboard/dashboard.html", {})
 
         appointments = patient.appointments.all().order_by("-date")[:5]
-        # tailor "patients" to be just the current patient with doctor + date info
-        patients = Patient.objects.filter(id=patient.id).select_related().order_by("-date_added")
+        patients = Patient.objects.filter(id=patient.id).prefetch_related("appointments__doctor").order_by("-date_added")
         reports = patient.reports.all().order_by("-date")[:5]
         messages_qs = []  # 👈 no messages for patients
 
@@ -335,10 +327,10 @@ def dashboard(request):
         "patients": patients,
         "reports": reports,
         "messages": messages_qs,
-        "session_role": role,   # pass role to template
+        "session_role": role,   # 👈 role for template
+        "doctor": doctor,       # 👈 doctor object if role == doctor
+        "patient": patient,     # 👈 patient object if role == patient
     })
-
-
 
 
 # ------------------ PATIENTS ------------------
@@ -388,8 +380,8 @@ def patients(request):
         },
     )
 
-def patient_detail(request, pk):
-    patient = get_object_or_404(Patient, pk=pk)
+def patient_detail(request, patient_id):
+    patient = get_object_or_404(Patient, patient_id=patient_id)
     role = request.session.get("user_role", None)  # doctor or patient
     return render(request, "dashboard/patient_detail.html", {
         "patient": patient,

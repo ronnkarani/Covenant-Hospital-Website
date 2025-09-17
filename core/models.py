@@ -136,23 +136,33 @@ class Patient(models.Model):
         return f"{self.name} ({self.patient_id})"
 
 
+# DEPARTMENT MODEL
+class Department(models.Model):
+    name = models.CharField(max_length=100, unique=True, default="General")
+
+    def __str__(self):
+        return self.name
+
 # DOCTOR MODEL
 class Doctor(models.Model):
     doctor_id = models.CharField(max_length=20, unique=True, editable=False, blank=True, null=True)  
     name = models.CharField(max_length=200)
-    specialty = models.CharField(max_length=100, default="General")
     email = models.EmailField(blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    department = models.CharField(max_length=100, default="General")
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     approved = models.BooleanField(default=False)   
 
     def save(self, *args, **kwargs):
         if not self.doctor_id:
             self.doctor_id = f"DOC-{uuid.uuid4().hex[:6].upper()}"
+        # ensure default department if none chosen
+        if not self.department:
+            general_dept, _ = Department.objects.get_or_create(name="General")
+            self.department = general_dept
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Dr. {self.name} ({self.doctor_id}) - {self.specialty}"
+        return f"Dr. {self.name} ({self.doctor_id}) - {self.department}"
 
 
 # APPOINTMENT MODEL

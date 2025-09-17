@@ -13,10 +13,12 @@
       All Messages
     {% endif %}
   </h2>
+  
   <p class="messages-list-meta">
     Showing <strong>{{ page_obj.paginator.count }}</strong> messages  
     {% if view_type == "unread" %}(unread only){% endif %}
   </p>
+
 </section>
 
 <!-- Search -->
@@ -39,7 +41,7 @@
     <table class="messages-list-table">
       <thead>
         <tr>
-          <th>ID</th>
+          <th>No</th>
           <th>Sender</th>
           <th>Subject</th>
           <th>Content</th>
