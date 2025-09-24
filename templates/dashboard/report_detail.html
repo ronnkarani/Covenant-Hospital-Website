@@ -21,17 +21,37 @@
       </div>
 
       <div class="report-info-card">
-        <p><strong>ID:</strong> {{ report.id }}</p>
-        <p><strong>Title:</strong> {{ report.title }}</p>
+        <p><strong>Name:</strong> {{ report.patient.name }}</p>
+        <p><strong>ID:</strong> {% if report.patient %}
+        {{ report.patient.patient_id }}
+      {% else %}
+        {{ report.id }}
+      {% endif %}</p>
+        
         <p><strong>Author:</strong> {{ report.author }}</p>
         <p><strong>Date:</strong> {{ report.date|date:"Y-m-d" }}</p>
         <p><strong>Status:</strong> 
           <span class="status {{ report.status|lower }}">{{ report.status }}</span>
         </p>
-        <div class="report-content">
-          <h4>Description</h4>
-          <p>{{ report.description|linebreaks }}</p>
-        </div>
+        <p><strong>Title:</strong> {{ report.title }}</p>
+        
+         {% if report.description %}
+  <div class="report-content">
+    <h4>Description</h4>
+    <p>{{ report.description|safe|linebreaks }}</p>
+  </div>
+  {% endif %}
+  {% if report.notes %}
+  <div class="report-content">
+    <h4>Notes</h4>
+    <p>{{ report.notes|safe|linebreaks }}</p>
+  </div>
+  {% endif %}
+
+  <div class="report-content">
+    <h4>Full Report</h4>
+    <p>{{ report.content|safe|linebreaks }}</p>
+  </div>
       </div>
     </section>
   </main>

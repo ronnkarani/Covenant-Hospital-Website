@@ -31,7 +31,11 @@
       <section class="reports-list-section">
   <div class="section-header">
     <h3><i class="fa-solid fa-file-alt"></i> Reports</h3>
-    <a href="#" class="btn-view-all">Add New</a>
+    {% if session_role == "doctor" %}
+    <a href="{% url 'appointments' %}" class="btn-generate-report">
+      <i class="fa-solid fa-file-medical"></i> Generate Report
+    </a>
+  {% endif %}
   </div>
 
   <div class="reports-table-wrapper">

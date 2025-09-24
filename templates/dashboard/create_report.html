@@ -1,0 +1,17 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Create Report{% endblock %}
+{% block page_class %}create-report-page{% endblock %}
+
+{% block content %}
+<section class="create-report">
+  <h2><i class="fa-solid fa-file-medical"></i> Generate Report</h2>
+  <p>Patient: <strong>{{ appointment.patient.name }}</strong> ({{ appointment.patient.patient_id }})</p>
+  <p>Appointment: {{ appointment.date|date:"Y-m-d H:i" }}</p>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-submit">Save Report</button>
+  </form>
+</section>
+{% endblock %}

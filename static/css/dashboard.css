@@ -416,8 +416,8 @@ body {
   font-weight: bold;
 }
 .status.pending { background: #fff3cd; color: #856404; }
-.status.concluded { background: #d4edda; color: #155724; }
-.status.cancelled { background: #f8d7da; color: #721c24; }
+.status.approved { background: #d4edda; color: #155724; }
+.status.rejected { background: #f8d7da; color: #721c24; }
 /* Appointments table - keep action buttons inline */
 /* ================== APPOINTMENT ACTION BUTTONS ================== */
 .appointments-table .btn-action {
@@ -1179,6 +1179,137 @@ body {
   background: #dc2626;
   color: #fff;
 }
+/* =======================
+   Report Buttons
+======================= */
+.btn-generate-report {
+  display: inline-block;
+  background: maroon;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-generate-report i {
+  margin-right: 6px;
+}
+
+.btn-generate-report:hover {
+  background: #a10000;
+  transform: translateY(-2px);
+}
+
+.btn-view-report {
+  display: inline-block;
+  background: #7c0e0e;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-view-report i {
+  margin-right: 6px;
+}
+
+.btn-view-report:hover {
+  background: #470101;
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   CREATE REPORT PAGE
+=========================== */
+.create-report {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.create-report h2 {
+  font-size: 1.8rem;
+  color: #7e1111;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.create-report p {
+  font-size: 0.95rem;
+  margin: 5px 0;
+  color: #555;
+}
+
+.create-report form {
+  margin-top: 20px;
+}
+
+.create-report form p {
+  margin-bottom: 15px;
+}
+
+.create-report label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.create-report input[type="text"],
+.create-report select,
+.create-report textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fafafa;
+  transition: border 0.2s ease, background 0.2s ease;
+}
+
+.create-report input[type="text"]:focus,
+.create-report select:focus,
+.create-report textarea:focus {
+  border-color: #fc6060;
+  background: #fff;
+  outline: none;
+}
+
+/* Submit Button */
+.create-report .btn-submit {
+  display: inline-block;
+  background: #ff4d4d;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  margin-top: 10px;
+}
+
+.create-report .btn-submit:hover {
+  background: #7a1f0e;
+  transform: translateY(-2px);
+}
+
+.create-report .btn-submit:active {
+  transform: translateY(0);
+}
+
 
 
 /* ===========================

@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from core.models import HeroSlide, HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment, Profile, Patient, Doctor, Appointment, Report, Message
-from core.forms import CommentForm, PatientForm
+from core.forms import CommentForm, PatientForm, ReportForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -469,6 +469,46 @@ def reports(request):
         "reports": reports_page,
         "query": q
     })
+
+
+@session_required
+def create_report(request, appointment_id):
+    role = request.session.get("user_role")
+    if role != "doctor":
+        messages.error(request, "Only doctors can generate reports.")
+        return redirect("dashboard")
+
+    doctor_id = request.session.get("doctor_id")
+    doctor = Doctor.objects.filter(id=doctor_id).first()
+    appointment = get_object_or_404(Appointment, id=appointment_id, doctor=doctor)
+
+    if hasattr(appointment, "report"):  # already has a report
+        messages.warning(request, "This appointment already has a report.")
+        return redirect("report_detail", report_id=appointment.report.id)
+
+    if request.method == "POST":
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.author = doctor
+            report.patient = appointment.patient
+            report.appointment = appointment
+            report.save()
+
+            # mark appointment as concluded
+            appointment.status = "concluded"
+            appointment.save()
+
+            messages.success(request, "Report created successfully.")
+            return redirect("report_detail", report_id=report.id)
+    else:
+        form = ReportForm()
+
+    return render(request, "dashboard/create_report.html", {
+        "form": form,
+        "appointment": appointment
+    })
+
 
 def report_detail(request, report_id):
     report = get_object_or_404(Report, id=report_id)

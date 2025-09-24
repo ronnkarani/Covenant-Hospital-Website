@@ -168,8 +168,8 @@ class Doctor(models.Model):
 # APPOINTMENT MODEL
 class Appointment(models.Model):
     STATUS_CHOICES = (
+        ('confirmed', 'Confirmed'),
         ('pending', 'Pending'),
-        ('concluded', 'Concluded'),
         ('cancelled', 'Cancelled'),
     )
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="appointments")
@@ -190,8 +190,11 @@ class Report(models.Model):
         ('rejected', 'Rejected'),
     )
     title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)  # NEW
+    notes = models.TextField(blank=True, null=True)
     author = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="reports")
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name="report", null=True, blank=True)
     date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     content = RichTextField()

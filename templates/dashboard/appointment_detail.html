@@ -19,6 +19,18 @@
         </div>
         {% endif %}
       </div>
+      {% if role == "doctor" %}
+  {% if not appointment.report and appointment.status != "cancelled" %}
+    <a href="{% url 'create_report' appointment.id %}" class="btn-generate-report">
+      <i class="fa-solid fa-file-medical"></i> Generate Report
+    </a>
+  {% elif appointment.report %}
+    <a href="{% url 'report_detail' appointment.report.id %}" class="btn-view-report">
+      <i class="fa-solid fa-eye"></i> View Report
+    </a>
+  {% endif %}
+{% endif %}
+
 
       <div class="appointment-info-card">
   <p><strong>ID:</strong> 
@@ -45,10 +57,15 @@
   <p><strong>Status:</strong> 
     <span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span>
   </p>
-  <p><strong>Notes:</strong> {{ appointment.notes|default:"—" }}</p>
+  {% if appointment.report %}
+  <p><strong>Doctor's Notes:</strong> {{ appointment.report.notes|default:"—" }}</p>
+{% endif %}
+
 </div>
 
     </section>
+    
+
   </main>
 
 </div>
