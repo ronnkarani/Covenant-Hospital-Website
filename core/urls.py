@@ -24,6 +24,7 @@ urlpatterns = [
     path("appointments/<int:appointment_id>/", views.appointment_detail, name="appointment_detail"),
     path("reports/<int:report_id>/", views.report_detail, name="report_detail"),
     path("appointments/<int:appointment_id>/report/create/", views.create_report, name="create_report"),
+    path("available-slots/", views.available_slots, name="available_slots"),
     path("messages/all", views.messages_all, name="messages_all"),
     path("messages/unread/", views.messages_unread, name="messages_unread"),
     path("messages/<int:pk>/", views.message_detail, name="message_detail"),

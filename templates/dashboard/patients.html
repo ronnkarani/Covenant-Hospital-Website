@@ -52,8 +52,13 @@
     {% elif role == "patient" %}
       <th>ID</th>
       <th>Name</th>
+      <th>Phone</th>
       <th>Doctor</th>
+      <th>Department</th>
       <th>Date</th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>Actions</th>
     {% endif %}
   </tr>
 </thead>
@@ -77,21 +82,45 @@
         </td>
       </tr>
     {% elif role == "patient" %}
-      <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
-        <td>{{ p.patient_id }}</td>
-        <td class="patient-name">{{ p.name }}</td>
-        <td>
-          {% with appt=p.appointments.first %}
-            {% if appt and appt.doctor %}Dr. {{ appt.doctor.name }}{% else %}N/A{% endif %}
-          {% endwith %}
-        </td>
-        <td>
-          {% with appt=p.appointments.first %}
-            {% if appt %}{{ appt.date|date:"Y-m-d H:i" }}{% else %}N/A{% endif %}
-          {% endwith %}
-        </td>
-      </tr>
-    {% endif %}
+  <tr {% if new_patient and patient.id == new_patient.id %} class="new-patient" {% endif %}>
+    <td>{{ p.patient_id }}</td>
+    <td class="patient-name">{{ p.name }}</td>
+    <td>{{ p.phone }}</td>
+    <td>
+      {% with appt=p.appointments.first %}
+        {% if appt and appt.doctor %}
+          Dr. {{ appt.doctor.name }}
+        {% else %}
+          N/A
+        {% endif %}
+      {% endwith %}
+    </td>
+    <td>
+      {% with appt=p.appointments.first %}
+        {% if appt and appt.doctor %}
+          {{ appt.doctor.department }}
+        {% else %}
+          N/A
+        {% endif %}
+      {% endwith %}
+    </td>
+    <td>
+      {% with appt=p.appointments.first %}
+        {% if appt %}
+          {{ appt.date|date:"Y-m-d H:i" }}
+        {% else %}
+          N/A
+        {% endif %}
+      {% endwith %}
+    </td>
+    <td>{{ p.age }}</td>
+    <td>{{ p.gender }}</td>
+    <td>
+      <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
+    </td>
+  </tr>
+{% endif %}
+
   {% empty %}
     <tr><td colspan="7">No patients found.</td></tr>
   {% endfor %}

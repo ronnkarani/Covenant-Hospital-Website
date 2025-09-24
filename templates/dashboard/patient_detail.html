@@ -19,7 +19,6 @@
   <p><strong>ID:</strong> {{ patient.patient_id }}</p>
         <p><strong>Name:</strong> {{ patient.name }}</p>
       <p><strong>Phone:</strong> {{ patient.phone }}</p>
-      <p><strong>Department:</strong> {{ patient.department }}</p>
       <p><strong>Age:</strong> {{ patient.age }}</p>
       <p><strong>Gender:</strong> {{ patient.gender }}</p>
     </div>
@@ -40,7 +39,10 @@
         <tr>
           <th>Date</th>
           <th>Doctor</th>
+          <th>Department</th>
           <th>Notes</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -48,7 +50,23 @@
           <tr>
             <td>{{ appt.date|date:"Y-m-d H:i" }}</td>
             <td>Dr. {{ appt.doctor.name }}</td>
+            <td>
+            {% if appt.doctor and appt.doctor.department %}
+              {{ appt.doctor.department.name }}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
             <td>{{ appt.notes|default:"-" }}</td>
+            <td><span class="status {{ appt.status|lower }}">{{ appt.status }}</span></td>
+             <td>
+            <div class="action-buttons">
+              <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
+              {% if session_role == "doctor" %}
+                <a href="#" class="btn-action update">Update</a>
+              {% endif %}
+            </div>
+          </td>
           </tr>
         {% empty %}
           <tr><td colspan="3">No appointments found.</td></tr>

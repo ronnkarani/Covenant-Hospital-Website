@@ -21,7 +21,7 @@
         {% csrf_token %}
         <div class="form-group">
           <label for="user_role">Register As</label>
-          <select name="user_role" required>
+          <select name="user_role" id="user_role" required>
             <option value="patient">Patient</option>
             <option value="doctor">Doctor</option>
           </select>

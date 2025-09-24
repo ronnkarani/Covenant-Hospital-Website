@@ -119,10 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// =========================
 // Filter doctors by selected department
-  const departmentSelect = document.getElementById('department-select');
-  const doctorSelect = document.getElementById('doctor-select');
+// =========================
+const departmentSelect = document.getElementById('department-select');
+const doctorSelect = document.getElementById('doctor-select');
 
+if (departmentSelect && doctorSelect) {
   departmentSelect.addEventListener('change', function() {
     const dept = this.value;
     Array.from(doctorSelect.options).forEach(option => {
@@ -130,18 +133,72 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     doctorSelect.value = "";
   });
+}
+
 
 /* ======================
-     Signup Role → Department Field Toggle
-  ====================== */
-  const roleSelect = document.querySelector("select[name='user_role']");
+   Signup Role → Department Field Toggle
+====================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const roleSelect = document.getElementById("user_role");
   const deptField = document.querySelector(".doctor-field");
+  const deptSelect = document.getElementById("department");
 
-  if (roleSelect && deptField) {
-    const toggleDept = () => {
-      deptField.style.display = roleSelect.value === "doctor" ? "block" : "none";
-    };
+  if (roleSelect && deptField && deptSelect) {
+    function toggleDept() {
+      if (roleSelect.value === "doctor") {
+        deptField.style.display = "block";
+        deptSelect.setAttribute("required", "required"); // 👈 required when doctor
+      } else {
+        deptField.style.display = "none";
+        deptSelect.removeAttribute("required"); // 👈 not required when patient
+      }
+    }
 
+    toggleDept(); // run once on load
     roleSelect.addEventListener("change", toggleDept);
-    toggleDept(); // run once at load
   }
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const doctorSelect = document.getElementById("doctor-select");
+  const dateInput = document.getElementById("appointment_date");
+  const timeSelect = document.getElementById("appointment_time");
+
+  async function fetchSlots() {
+    const doctorId = doctorSelect.value;
+    const date = dateInput.value;
+
+    if (!doctorId || !date) {
+      timeSelect.innerHTML = '<option value="">Select a time slot</option>';
+      return;
+    }
+
+    try {
+      const response = await fetch(`/available-slots/?doctor=${doctorId}&date=${date}`);
+      const data = await response.json();
+
+      timeSelect.innerHTML = "";
+
+      if (data.slots.length > 0) {
+        data.slots.forEach(slot => {
+          const option = document.createElement("option");
+          option.value = slot;
+          option.textContent = slot;
+          timeSelect.appendChild(option);
+        });
+      } else {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "No available slots";
+        timeSelect.appendChild(option);
+      }
+    } catch (error) {
+      console.error("Error fetching slots:", error);
+    }
+  }
+
+  doctorSelect.addEventListener("change", fetchSlots);
+  dateInput.addEventListener("change", fetchSlots);
+});

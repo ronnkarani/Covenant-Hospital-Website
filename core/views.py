@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
-from core.models import HeroSlide, HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment, Profile, Patient, Doctor, Appointment, Report, Message
+from core.models import HeroSlide, HeroContent, HomeCard, About, Service, BlogPost, PartnerLogo, BlogCategory, Comment, Profile, Patient, Doctor, Appointment, Report, Message, Department
 from core.forms import CommentForm, PatientForm, ReportForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -15,7 +15,8 @@ from django.utils.safestring import mark_safe
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from datetime import datetime, timedelta, time
+from django.http import JsonResponse
 
 
 def signup_view(request):
@@ -39,36 +40,45 @@ def signup_view(request):
         profile, created = Profile.objects.get_or_create(user=user)
 
         if role == "doctor":
-            profile.role = "pending"
             dept_id = request.POST.get("department")
+            if not dept_id:  # 👈 safeguard: department is missing
+                messages.error(request, "Please select a department.")
+                user.delete()  # cleanup created user
+                return redirect("signup")
+
             department = Department.objects.filter(id=dept_id).first()
+            if not department:  # 👈 safeguard: invalid department
+                messages.error(request, "Invalid department selected.")
+                user.delete()
+                return redirect("signup")
+
+            profile.role = "pending"  # waiting admin approval
             doctor = Doctor.objects.create(
                 name=username,
                 phone=phone,
                 email=email,
-                department=department  # may be None → auto defaults to General
+                department=department
             )
             hospital_id = doctor.doctor_id
-        else:
+
+        else:  # patient
             profile.role = "patient"
             patient = Patient.objects.create(
                 name=username,
                 phone=phone,
                 age=0,
-                gender="M"  # or optional from form
+                gender="M"  # could make this dynamic later
             )
             profile.hospital_id = patient.patient_id
             profile.save()
             hospital_id = patient.patient_id
 
         profile.save()
-        # send email (same as before) ...
-        # success messages (same as before) ...
 
         request.session["new_hospital_id"] = hospital_id
         return redirect("login")
 
-    # Pass departments to template
+    # GET request
     departments = Department.objects.all().order_by("name")
     return render(request, "signup.html", {"departments": departments})
 
@@ -762,6 +772,50 @@ def add_appointment(request):
 
     return render(request, "dashboard/add_appointment.html")
 
+
+@session_required
+def available_slots(request):
+    doctor_id = request.GET.get("doctor")
+    date_str = request.GET.get("date")
+
+    if not doctor_id or not date_str:
+        return JsonResponse({"slots": []})
+
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return JsonResponse({"slots": []})
+
+    doctor = Doctor.objects.filter(id=doctor_id).first()
+    if not doctor:
+        return JsonResponse({"slots": []})
+
+    # Working hours: 9AM–5PM
+    start_time = time(9, 0)
+    end_time = time(17, 0)
+    slot_duration = timedelta(minutes=30)
+
+    slots = []
+    current = datetime.combine(date_obj, start_time)
+    end = datetime.combine(date_obj, end_time)
+
+    while current < end:
+        slots.append(current.strftime("%H:%M"))
+        current += slot_duration
+
+    # Already booked slots
+    booked_times = Appointment.objects.filter(
+        doctor=doctor,
+        date__date=date_obj,
+        status__in=["pending", "concluded"]
+    ).values_list("date", flat=True)
+
+    booked_set = {dt.strftime("%H:%M") for dt in booked_times}
+
+    available = [s for s in slots if s not in booked_set]
+
+    return JsonResponse({"slots": available})
+
 @session_required
 def book_appointment(request):
     role = request.session.get("user_role")
@@ -779,10 +833,18 @@ def book_appointment(request):
         phone = request.POST.get("phone")
         age = request.POST.get("age")
         gender = request.POST.get("gender")
-        department = request.POST.get("department")
+        department_id = request.POST.get("department")
         doctor_id = request.POST.get("doctor")
         issue = request.POST.get("issue")
-        appointment_date = request.POST.get("date")  # optional: user picks date/time
+        date_str = request.POST.get("appointment_date")
+        time_str = request.POST.get("appointment_time")
+
+        # Combine into one datetime
+        try:
+            appointment_datetime = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+        except ValueError:
+            messages.error(request, "Invalid date/time format.")
+            return redirect("book_appointment")
 
         # Create patient if not exists
         if not patient:
@@ -794,26 +856,38 @@ def book_appointment(request):
             )
             request.session["patient_id"] = patient.id
 
-        # Fetch doctor
+        # Fetch doctor linked to department
+        department = Department.objects.filter(id=department_id).first()
         doctor = Doctor.objects.filter(id=doctor_id, department=department).first()
         if not doctor:
             messages.error(request, "Selected doctor is not valid for the chosen department.")
+            return redirect("book_appointment")
+        
+         # 🔒 Check if doctor already has appointment at that datetime
+        conflict = Appointment.objects.filter(
+            doctor=doctor,
+            date=appointment_datetime,
+            status__in=["pending", "concluded"]  # avoid cancelled ones
+        ).exists()
+
+        if conflict:
+            messages.error(request, f"Dr. {doctor.name} is not available at {appointment_datetime.strftime('%Y-%m-%d %H:%M')}. Please choose another time.")
             return redirect("book_appointment")
 
         # Create appointment
         Appointment.objects.create(
             patient=patient,
             doctor=doctor,
-            date=timezone.now() if not appointment_date else appointment_date,
+            date=appointment_datetime,
             status="pending"
         )
 
-        messages.success(request, f"Appointment booked successfully with Dr. {doctor.name}!")
+        messages.success(request, f"Appointment booked successfully with Dr. {doctor.name}  at {appointment_datetime.strftime('%Y-%m-%d %H:%M')}!")
         return redirect("appointments")  # show in portal
 
     # GET request: show form
-    departments = Doctor.objects.values_list("department", flat=True).distinct()
-    doctors = Doctor.objects.all()
+    departments = Department.objects.filter(doctor__isnull=False).distinct()
+    doctors = Doctor.objects.select_related("department").all()
 
     return render(request, "book_appointment.html", {
         "patient": patient,

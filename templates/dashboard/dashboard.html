@@ -6,9 +6,6 @@
 {% block content %}
 
 
-      
-
-
 {% if session_role == "doctor" %}
   <!-- Messages Section -->
   <section class="messages">
@@ -65,12 +62,15 @@
               <td>{{ p.gender }}</td>
               <td>
   <div class="action-buttons">
-    <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
-
-    <a href="" class="btn-action update">Update</a>
-    <a href="" class="btn-action delete">Delete</a>
+    {% if session_role == "doctor" %}
+      <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
+      <a href="#" class="btn-action update">Update</a>
+    {% else %}
+      <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
+    {% endif %}
   </div>
 </td>
+
             {% else %}
               <td>
                 {% with appt=p.appointments.first %}
@@ -82,10 +82,20 @@
                 {% endwith %}
               </td>
 
+              <td>
+  {% with appt=p.appointments.first %}
+    {% if appt and appt.doctor %}
+      {{ appt.doctor.name }}
+    {% else %}
+      N/A
+    {% endif %}
+  {% endwith %}
+</td>
+
 
               <td>{{ p.date_added|date:"Y-m-d" }}</td>
               <td>
-                <a href="" class="btn-action view">View</a>
+                <a href="{% url 'patient_detail' p.patient_id %}" class="btn-action view">View</a>
               </td>
             {% endif %}
           </tr>
@@ -133,10 +143,12 @@
                 <td>
   <div class="action-buttons">
     <a href="{% url 'appointment_detail' appt.id %}" class="btn-action view">View</a>
-    <a href="" class="btn-action update">Update</a>
-    <a href="" class="btn-action delete">Delete</a>
+    {% if session_role == "doctor" %}
+      <a href="#" class="btn-action update">Update</a>
+    {% endif %}
   </div>
 </td>
+
                 
               </tr>
               {% empty %}

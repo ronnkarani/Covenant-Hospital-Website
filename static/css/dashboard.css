@@ -409,15 +409,38 @@ body {
   background: #f3e6e6;
   color: maroon;
 }
+
+/* ================== STATUS BADGES ================== */
 .status {
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-align: center;
+  min-width: 80px;
 }
-.status.pending { background: #fff3cd; color: #856404; }
-.status.approved { background: #d4edda; color: #155724; }
-.status.rejected { background: #f8d7da; color: #721c24; }
+
+/* Appointment statuses */
+.status.concluded {
+  background-color: #d4edda;   /* light green */
+  color: #155724;              /* dark green text */
+  border: 1px solid #c3e6cb;
+}
+
+.status.pending {
+  background-color: #fff3cd;   /* light yellow */
+  color: #856404;              /* dark yellow text */
+  border: 1px solid #ffeeba;
+}
+
+.status.cancelled {
+  background-color: #f8d7da;   /* light red */
+  color: #721c24;              /* dark red text */
+  border: 1px solid #f5c6cb;
+}
+
 /* Appointments table - keep action buttons inline */
 /* ================== APPOINTMENT ACTION BUTTONS ================== */
 .appointments-table .btn-action {

@@ -132,7 +132,7 @@
       <i class="fa-solid fa-file-medical"></i> Reports
     </a>
   {% elif session_role == "patient" %}
-    <a href="" class="btn-cta">
+    <a href="{% url 'book_appointment' %}" class="btn-cta">
       <i class="fa-solid fa-calendar-plus"></i> Book Appointment
     </a>
   {% endif %}

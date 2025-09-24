@@ -38,20 +38,35 @@
       <select name="department" id="department-select" required>
         <option value="">Select Department</option>
         {% for dept in departments %}
-          <option value="{{ dept }}">{{ dept }}</option>
+          <option value="{{ dept.id }}">{{ dept.name }}</option>
         {% endfor %}
       </select>
     </div>
 
+<div class="form-group">
+  <label for="doctor-select">Doctor</label>
+  <select name="doctor" id="doctor-select" required>
+    <option value="">Select Doctor</option>
+    {% for doc in doctors %}
+      <option value="{{ doc.id }}" data-department="{{ doc.department.id }}">{{ doc.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
     <div class="form-group">
-      <label>Doctor</label>
-      <select name="doctor" id="doctor-select" required>
-        <option value="">Select Doctor</option>
-        {% for doc in doctors %}
-          <option value="{{ doc.id }}" data-department="{{ doc.department }}">{{ doc.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
+  <label for="appointment_date">Select Date</label>
+  <input type="date" name="appointment_date" id="appointment_date" required>
+</div>
+
+
+<div class="form-group">
+  <label for="appointment_time">Select Time</label>
+  <select name="appointment_time" id="appointment_time" required>
+    <option value="">Select a time slot</option>
+  </select>
+</div>
+
+
 
     <!-- Issue Description -->
     <div class="form-group">

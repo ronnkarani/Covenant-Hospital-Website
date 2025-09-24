@@ -1381,6 +1381,24 @@ h1 {
   background: #800000;
 }
 
+.signup-form select,
+.signup-form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.signup-form select:focus,
+.signup-form input:focus {
+  border-color: maroon;
+  outline: none;
+  box-shadow: 0 0 4px rgba(128,0,0,0.3);
+}
+
+
 .book-appointment-section {
   max-width: 600px;
   margin: 50px auto;
